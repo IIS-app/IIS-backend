@@ -2,10 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 from django.utils import timezone
 # from django.db.models.fields import DateTimeField, DateField
-
-
 # Create your models here.
-
 # Create custom user manager here
 class UserManager(BaseUserManager):
   def _create_user(self, email, password, is_staff, is_superuser, **extra_fields):
@@ -51,7 +48,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     codepen = models.URLField(null=True, blank=True)
     portfolio = models.URLField(null=True, blank=True)
     personal_pitch = models.TextField(null=True, blank=True, max_length=1000)
-    
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
@@ -64,7 +60,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # personal_pitch
     # links
-
+# Create Win model here
+class Win(models.Model):
+  title = models.CharField(max_length=50)
+  created_date = models.DateTimeField(auto_now_add=True)
+  occured_date = models.DateField()
+  win = models.TextField()
+  win_picture = models.ImageField(null=True, blank=True)
+   
+  def __str__(self):
+        return self.title
 
 class TargetCompany(models.Model):
     RANK_CHOICES=[
