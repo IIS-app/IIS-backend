@@ -62,12 +62,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # personal_pitch
     # links
-    
-
-class CompanyContacts(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
-    notes = models.TextField(max_length=5000, null=True, blank=True)
 
 
 class TargetCompany(models.Model):
