@@ -1,9 +1,12 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
+# from django.db.models.fields import DateTimeField, DateField
+
 
 # Create your models here.
 
+# Create custom user manager here
 class UserManager(BaseUserManager):
   def _create_user(self, email, password, is_staff, is_superuser, **extra_fields):
     if not email:
@@ -32,7 +35,7 @@ class UserManager(BaseUserManager):
     user=self._create_user(email, password, True, True, **extra_fields)
     return user
 
-
+# Create User model here
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=254, unique=True)
     first_name = models.CharField(max_length=254)
@@ -57,4 +60,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     # personal_pitch
     # links
 
-
+# Create Win model here
+class Win(models.Model):
+  title = models.CharField(max_length=50)
+  created_date = models.DateTimeField(auto_now_add=True)
+  occured_date = models.DateField()
+  win = models.TextField()
+  win_picture = models.ImageField(null=True, blank=True)
+   
+  def __str__(self):
+        return self.title
