@@ -1,10 +1,12 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
-from  django.contrib.postgres.fields import ArrayField
+# from django.db.models.fields import DateTimeField, DateField
+
 
 # Create your models here.
 
+# Create custom user manager here
 class UserManager(BaseUserManager):
   def _create_user(self, email, password, is_staff, is_superuser, **extra_fields):
     if not email:
@@ -33,7 +35,7 @@ class UserManager(BaseUserManager):
     user=self._create_user(email, password, True, True, **extra_fields)
     return user
 
-
+# Create User model here
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=254, unique=True)
     first_name = models.CharField(max_length=254)
