@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
+from  django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
@@ -43,6 +44,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     last_login = models.DateTimeField(null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
+    linkedin = models.URLField(null=True, blank=True)
+    github = models.URLField(null=True, blank=True)
+    codepen = models.URLField(null=True, blank=True)
+    portfolio = models.URLField(null=True, blank=True)
+    personal_pitch = models.TextField(null=True, blank=True, max_length=1000)
     
 
     USERNAME_FIELD = 'email'
@@ -56,5 +62,59 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # personal_pitch
     # links
+    
+
+class CompanyContacts(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    notes = models.TextField(max_length=5000, null=True, blank=True)
 
 
+class TargetCompany(models.Model):
+    RANK_CHOICES=[
+        ('1', '1'),
+        ('2', '2'),
+        ('3', '3'),
+        ('4', '4'),
+        ('5', '5')
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    company_name = models.CharField(max_length=155)
+    rank = models.CharField(choices=RANK_CHOICES, null=True, blank=True,max_length=10)
+    website = models.URLField()
+    job_page = models.URLField()
+    comments = models.TextField(max_length=5000, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class CompanyContacts(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField(null=True, blank=True)
+    notes = models.TextField(max_length=5000, null=True, blank=True)
+    company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class StarrQuestions(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.TextField(max_length=500)
+    summary = models.TextField(max_length=1000, null=True, blank=True)
+    situation = models.TextField(max_length=500, null=True, blank=True)
+    task = models.TextField(max_length=500, null=True, blank=True)
+    action = models.TextField(max_length=500, null=True, blank=True)
+    reflection = models.TextField(max_length=500, null=True, blank=True)
+    result = models.TextField(max_length=500, null=True, blank=True)
+
+
+class CoverLetter(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50)
+    notes = models.TextField(max_length=5000, null=True, blank=True)
+    file = models.FileField(upload_to='coverletter')
+
+class Resume(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50, null=True, blank=True)
+    notes = models.TextField(max_length=5000, null=True, blank=True)
+    file = models.FileField(upload_to='resume')
