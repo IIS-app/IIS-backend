@@ -66,7 +66,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Win(models.Model):
   title = models.CharField(max_length=50)
   created_date = models.DateTimeField(auto_now_add=True)
-  occured_date = models.DateField()
+  occured_date = models.DateField(null=True, blank=True)
   win = models.TextField()
   win_picture = models.ImageField(null=True, blank=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -87,7 +87,7 @@ class TargetCompany(models.Model):
     company_name = models.CharField(max_length=155)
     rank = models.CharField(choices=RANK_CHOICES, null=True, blank=True,max_length=10)
     website = models.URLField()
-    job_page = models.URLField()
+    job_page = models.URLField(null =True, blank=True)
     comments = models.TextField(max_length=5000, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

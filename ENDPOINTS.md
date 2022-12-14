@@ -101,4 +101,379 @@ GET /auth/users/me/
     "email": "email@example.com",
 }
 ```
-##
+## Create a win
+### Request
+requirements: user must be logged in
+required fields: title, win
+```json
+POST /wins/
+{
+	"title": "Example title",
+	"win": "Example win",
+	"occured_date": "2022-12-25"
+
+}
+```
+### Response
+response: If response is the same as the information you provided creation was successful
+```json
+200 OK
+{
+	"title": "Example title",
+	"win": "Example win",
+	"win_picture": null,
+	"created_date": "2022-12-14T22:15:58.544331Z",
+	"occured_date": "2022-12-25"
+}
+```
+## Win info
+### Request
+Requirement: user must be logged in
+```json
+GET /wins/
+```
+### Response
+```json
+200 OK
+{
+	"title": "Example Title",
+	"win": "Example Win",
+	"win_picture": "This-will-be-a-file.jpeg",
+	"created_date": "2022-12-14T16:04:04.967360Z",
+	"occured_date": "2022-06-29"
+}
+```
+NOTE: This will be a list of all the users wins
+## Win Detail
+### Request
+Requirement: user must be logged in
+```json
+GET /wins/pk    Ex: /wins/1
+```
+### Response
+```json
+{
+	"title": "Example title",
+	"win": "Example win",
+	"win_picture": null,
+	"created_date": "2022-12-14T22:15:58.544331Z",
+	"occured_date": "2022-12-25"
+}
+```
+## Edit a Win
+### Request
+Requirement: user must be logged in
+```json
+PTCH /wins/pk
+```
+NOTE: "Only add the fields you want to change."
+## Response
+```json
+200 OK
+{
+	"title": "Example title",
+	"win": "Example win",
+	"win_picture": null,
+	"created_date": "2022-12-14T22:15:58.544331Z",
+	"occured_date": "2022-12-25"
+}
+```
+## Edit a Win(Second way)
+### Request
+Requirement: user must be logged in
+Required fields: Title, Win
+```json
+PUT /wins/pk
+{
+	"title": "Example title",
+	"win": "Example win",
+}
+```
+NOTE: This is essentially rebuilding the card you will still have to input other fields if you want to change them.
+## Delete a Win
+### Request
+Requirement: user must be logged in
+```json
+DELETE /wins/pk
+```
+## Response
+```json
+204 No Content
+```
+
+## Create a Starr Story
+### Request
+requirements: user must be logged in
+required fields:  "Question"
+```json
+POST /starr-stories/
+{
+	"question": "What?",
+	"summary": "A summary of what",
+	"situation": "What is the situation",
+	"task": "What tast",
+	"action": "What action",
+	"reflection": "What reflection",
+	"result": "What result"
+}
+```
+### Response
+response: If response is the same as the information you provided creation was successful
+```json
+200 OK
+{
+	"question": "What?",
+	"summary": "A summary of what",
+	"situation": "What is the situation",
+	"task": "What tast",
+	"action": "What action",
+	"reflection": "What reflection",
+	"result": "What result"
+}
+```
+## Starr Story list
+### Request
+Requirement: user must be logged in
+```json
+GET /starr-stories/
+```
+### Response
+```json
+200 OK
+{
+	"question": "What?",
+	"summary": "A summary of what",
+	"situation": "What is the situation",
+	"task": "What tast",
+	"action": "What action",
+	"reflection": "What reflection",
+	"result": "What result"
+}
+```
+NOTE: This will be a list of all the users Starr Stories
+## Starr Story Detail
+### Request
+Requirement: user must be logged in
+```json
+GET /starr-stories/pk    Ex: /starr-stories/1
+```
+### Response
+```json
+{
+	"question": "What?",
+	"summary": "A summary of what",
+	"situation": "What is the situation",
+	"task": "What tast",
+	"action": "What action",
+	"reflection": "What reflection",
+	"result": "What result"
+}
+```
+## Edit a Starr Story
+### Request
+Requirement: user must be logged in
+```json
+PTCH /starr-stories/pk
+```
+NOTE: "Only add the fields you want to change."
+## Response
+```json
+200 OK
+{
+	"question": "What?",
+	"summary": "A summary of what",
+	"situation": "What is the situation",
+	"task": "What tast",
+	"action": "What action",
+	"reflection": "What reflection",
+	"result": "What result"
+}
+```
+NOTE: Response should reflect changes
+## Edit a Starr story(Second way)
+### Request
+Requirement: user must be logged in
+Required fields: Question
+```json
+PUT /starr-stories/pk
+{
+	"question": "What?",
+	"summary": "A summary of what",
+	"situation": "What is the situation",
+	"task": "What tast",
+	"action": "What action",
+	"reflection": "What reflection",
+	"result": "What result"
+}
+```
+NOTE: This is essentially rebuilding the card you will still have to input other fields if you want to change them.
+## Delete a Starr Story
+### Request
+Requirement: user must be logged in
+```json
+DELETE /starr-stories/pk
+```
+## Response
+```json
+204 No Content
+```
+
+## Create a Target Company
+### Request
+requirements: user must be logged in
+required fields: company_name, website
+```json
+POST /target-company/
+{
+		"company_name": "google",
+		"rank": 1,
+		"website": "http://google.com",
+		"job_page": "http://google.com/job",
+		"comments": "They're alright",
+		"created_at": "2022-12-14T20:10:54.796051Z",
+		"updated_at": "2022-12-14T20:10:54.796064Z"
+}
+```
+NOTE: Rank has a choice to be 1-5 but users can select multiple companies to a single rank
+### Response
+response: If response is the same as the information you provided creation was successful
+```json
+200 OK
+{
+		"company_name": "google",
+		"rank": null,
+		"website": "http://google.com",
+		"job_page": "http://google.com/job",
+		"comments": "They're alright",
+		"created_at": "2022-12-14T20:10:54.796051Z",
+		"updated_at": "2022-12-14T20:10:54.796064Z"
+}
+```
+## Target Company list
+### Request
+Requirement: user must be logged in
+```json
+GET /target-company/
+```
+### Response
+```json
+200 OK
+{
+	"company_name": "google",
+	"rank": null,
+	"website": "http://google.com",
+	"job_page": "http://google.com/job",
+	"comments": "They're alright",
+	"created_at": "2022-12-14T20:10:54.796051Z",
+	"updated_at": "2022-12-14T20:10:54.796064Z"
+}
+```
+NOTE: This will be a list of all the users Target Companies
+## Target Company Detail
+### Request
+Requirement: user must be logged in
+```json
+GET /target-comapny/pk    Ex: /target-company/1
+```
+### Response
+```json
+{
+	"company_name": "google",
+	"rank": null,
+	"website": "http://google.com",
+	"job_page": "http://google.com/job",
+	"comments": "They're alright",
+	"created_at": "2022-12-14T20:10:54.796051Z",
+	"updated_at": "2022-12-14T20:10:54.796064Z"
+}
+```
+## Edit a Target Company
+### Request
+Requirement: user must be logged in
+```json
+PTCH /target-company/pk
+```
+NOTE: "Only add the fields you want to change."
+## Response
+```json
+200 OK
+{
+	"company_name": "google",
+	"rank": null,
+	"website": "http://google.com",
+	"job_page": "http://google.com/job",
+	"comments": "They're alright",
+	"created_at": "2022-12-14T20:10:54.796051Z",
+	"updated_at": "2022-12-14T20:10:54.796064Z"
+}
+```
+NOTE: Response should reflect changes
+## Edit a Starr story(Second way)
+### Request
+Requirement: user must be logged in
+Required fields: company_name, website
+```json
+PUT /target-company/pk
+{
+	"company_name": "google",
+	"rank": null,
+	"website": "http://google.com",
+	"job_page": "http://google.com/job",
+	"comments": "They're alright",
+	"created_at": "2022-12-14T20:10:54.796051Z",
+	"updated_at": "2022-12-14T20:10:54.796064Z"
+}
+```
+NOTE: This is essentially rebuilding the card you will still have to input other fields if you want to change them.
+## Delete a Target Company
+### Request
+Requirement: user must be logged in
+```json
+DELETE /target-company/pk
+```
+## Response
+```json
+204 No Content
+```
+## Create a Company Contact
+### Request
+requirements: user must be logged in
+required fields: company, name
+```json
+POST /target-company/contact
+{
+	"company": 1,
+	"name": "joe",
+	"email": "joe@example.com",
+	"notes": "Joe likes to make his own deodorant"
+}
+```
+NOTE: company needs to be a pk referring to an existing company within the app
+### Response
+response: If response is the same as the information you provided creation was successful
+```json
+200 OK
+{
+	"company": 1,
+	"name": "joe",
+	"email": "joe@example.com",
+	"notes": "Joe likes to make his own deodorant"
+}
+```
+## Company Contact list
+### Request
+Requirement: user must be logged in
+```json
+GET /target-company/contacts
+```
+### Response
+```json
+200 OK
+{
+	"company": 1,
+	"name": "joe",
+	"email": "joe@example.com",
+	"notes": "Joe likes to make his own deodorant"
+}
+```
+NOTE: This will be a list of all the users company contacts

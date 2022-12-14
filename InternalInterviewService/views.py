@@ -44,7 +44,7 @@ class StarrQuestionsView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
     def get_queryset(self):
-        return StarrQuestions.objects.filter(user=self.request.user)
+        return StarrQuestions.objects.filter(user=self.request.user.id)
 
 class CoverLetterView(generics.ListCreateAPIView):
     queryset = CoverLetter.objects.all()
