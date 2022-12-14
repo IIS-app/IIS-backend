@@ -15,10 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from InternalInterviewService import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
     path('api-auth/', include('rest_framework.urls')),
+    path('wins/', views.WinView.as_view(), name='win-list'),
+    path('wins/<int:pk>', views.WinDetail.as_view(), name='win-detail'),
+    path('target-compay/', views.TargetCompanyView.as_view(), name='target-co-list'),
+    path('target-company/<int:pk>', views.TargetCompanyDetail.as_view(), name='target-co-detail'),
+    path('target-company/contacts/', views.CompanyContactsView.as_view(), name='contact-list'),
+    path('starr-stories/', views.StarrQuestionsView.as_view(), name='starr-stories'),
+    path('starr-stories/<int:pk>', views.StarrQuestionsDetial.as_view(), name='starr-stories-detail'),
+    path('cover-letter/', views.CoverLetterView.as_view(), name='cover-letter'),
+    path('cover-letter/<int:pk>', views.CoverLetterDetail.as_view(), name='cover-letter-detail'),
+    path('resume/', views.ResumeView.as_view(), name='resume'),
+    path('resume/<int:pk>', views.ResumeDetail.as_view(), name='resume-detail'),
 ]
