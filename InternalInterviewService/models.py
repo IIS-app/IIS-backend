@@ -37,6 +37,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=254, unique=True)
     first_name = models.CharField(max_length=254)
     last_name = models.CharField(max_length=254)
+    id = models.BigAutoField(primary_key=True, unique=True, editable=False)
     codename = models.CharField(max_length=20)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -48,6 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     codepen = models.URLField(null=True, blank=True)
     portfolio = models.URLField(null=True, blank=True)
     personal_pitch = models.TextField(null=True, blank=True, max_length=1000)
+
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
@@ -67,6 +69,7 @@ class Win(models.Model):
   occured_date = models.DateField()
   win = models.TextField()
   win_picture = models.ImageField(null=True, blank=True)
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
    
   def __str__(self):
         return self.title
