@@ -67,7 +67,24 @@ class Win(models.Model):
   occured_date = models.DateField()
   win = models.TextField()
   win_picture = models.ImageField(null=True, blank=True)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wins')
    
   def __str__(self):
         return self.title
 
+# Create Question model here
+class Question(models.Model):
+  INTERVIEW_QUESTIONS = 'IQ'
+  COMPANY_QUESTIONS = 'CQ'
+  QUESTION_TYPE = [
+      (INTERVIEW_QUESTIONS, 'Interview Questions'),
+      (COMPANY_QUESTIONS, 'Company Questions'),
+  ]
+  question_type = models.CharField(
+      max_length=2,
+      choices=QUESTION_TYPE,
+      default=INTERVIEW_QUESTIONS)
+  question = models.CharField(max_length=50)
+  created_date = models.DateField(auto_now_add=True)
+  answer = models.TextField(null=True)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='questions')
