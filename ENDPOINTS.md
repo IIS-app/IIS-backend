@@ -119,12 +119,12 @@ response: If response is the same as the information you provided creation was s
 ```json
 200 OK
 {
+	"pk": 1
 	"title": "Example title",
 	"win": "Example win",
 	"win_picture": null,
 	"created_date": "2022-12-14T22:15:58.544331Z",
 	"occured_date": "2022-12-25",
-	"id": 1
 }
 ```
 ## Win info
@@ -137,12 +137,12 @@ GET /wins/
 ```json
 200 OK
 {
+	"pk": 1,
 	"title": "Example Title",
 	"win": "Example Win",
 	"win_picture": "This-will-be-a-file.jpeg",
 	"created_date": "2022-12-14T16:04:04.967360Z",
 	"occured_date": "2022-06-29",
-	"id": 1
 }
 ```
 NOTE: This will be a list of all the users wins
@@ -155,12 +155,12 @@ GET /wins/pk    Ex: /wins/1
 ### Response
 ```json
 {
+	"pk": 1,
 	"title": "Example title",
 	"win": "Example win",
 	"win_picture": null,
 	"created_date": "2022-12-14T22:15:58.544331Z",
-	"occured_date": "2022-12-25",
-	"id": 1
+	"occured_date": "2022-12-25"
 }
 ```
 ## Edit a Win
@@ -174,12 +174,12 @@ NOTE: "Only add the fields you want to change."
 ```json
 200 OK
 {
+	"pk": 1,
 	"title": "Example title",
 	"win": "Example win",
 	"win_picture": null,
 	"created_date": "2022-12-14T22:15:58.544331Z",
-	"occured_date": "2022-12-25",
-	"id": 1
+	"occured_date": "2022-12-25"
 }
 ```
 ## Edit a Win(Second way)
@@ -226,14 +226,14 @@ response: If response is the same as the information you provided creation was s
 ```json
 200 OK
 {
+	"pk": 1,
 	"question": "What?",
 	"summary": "A summary of what",
 	"situation": "What is the situation",
 	"task": "What tast",
 	"action": "What action",
 	"reflection": "What reflection",
-	"result": "What result",
-	"id": 1
+	"result": "What result"
 }
 ```
 ## Starr Story list
@@ -246,14 +246,14 @@ GET /starr-stories/
 ```json
 200 OK
 {
+	"pk": 1,
 	"question": "What?",
 	"summary": "A summary of what",
 	"situation": "What is the situation",
 	"task": "What tast",
 	"action": "What action",
 	"reflection": "What reflection",
-	"result": "What result",
-	"id": 1
+	"result": "What result"
 }
 ```
 NOTE: This will be a list of all the users Starr Stories
@@ -266,14 +266,14 @@ GET /starr-stories/pk    Ex: /starr-stories/1
 ### Response
 ```json
 {
+	"pk": 1,
 	"question": "What?",
 	"summary": "A summary of what",
 	"situation": "What is the situation",
 	"task": "What tast",
 	"action": "What action",
 	"reflection": "What reflection",
-	"result": "What result",
-	"id": 1
+	"result": "What result"
 }
 ```
 ## Edit a Starr Story
@@ -287,14 +287,14 @@ NOTE: "Only add the fields you want to change."
 ```json
 200 OK
 {
+	"pk": 1,
 	"question": "What?",
 	"summary": "A summary of what",
 	"situation": "What is the situation",
 	"task": "What tast",
 	"action": "What action",
 	"reflection": "What reflection",
-	"result": "What result",
-	"id": 1
+	"result": "What result"
 }
 ```
 NOTE: Response should reflect changes
@@ -333,14 +333,14 @@ required fields: company_name, website
 ```json
 POST /target-company/
 {
+	"pk": 1,
 	"company_name": "google",
 	"rank": 1,
 	"website": "http://google.com",
 	"job_page": "http://google.com/job",
 	"comments": "They're alright",
 	"created_at": "2022-12-14T20:10:54.796051Z",
-	"updated_at": "2022-12-14T20:10:54.796064Z",
-	"id": 1
+	"updated_at": "2022-12-14T20:10:54.796064Z"
 }
 ```
 NOTE: Rank has a choice to be 1-5 but users can select multiple companies to a single rank
@@ -349,14 +349,14 @@ response: If response is the same as the information you provided creation was s
 ```json
 200 OK
 {
+	"pk": 1,
 	"company_name": "google",
 	"rank": null,
 	"website": "http://google.com",
 	"job_page": "http://google.com/job",
 	"comments": "They're alright",
 	"created_at": "2022-12-14T20:10:54.796051Z",
-	"updated_at": "2022-12-14T20:10:54.796064Z",
-	"id": 1
+	"updated_at": "2022-12-14T20:10:54.796064Z"
 }
 ```
 ## Target Company list
@@ -369,14 +369,14 @@ GET /target-company/
 ```json
 200 OK
 {
+	"pk": 1,
 	"company_name": "google",
 	"rank": null,
 	"website": "http://google.com",
 	"job_page": "http://google.com/job",
 	"comments": "They're alright",
 	"created_at": "2022-12-14T20:10:54.796051Z",
-	"updated_at": "2022-12-14T20:10:54.796064Z",
-	"id": 1
+	"updated_at": "2022-12-14T20:10:54.796064Z"
 }
 ```
 NOTE: This will be a list of all the users Target Companies
@@ -389,14 +389,14 @@ GET /target-comapny/pk    Ex: /target-company/1
 ### Response
 ```json
 {
+	"pk": 1,
 	"company_name": "google",
 	"rank": null,
 	"website": "http://google.com",
 	"job_page": "http://google.com/job",
 	"comments": "They're alright",
 	"created_at": "2022-12-14T20:10:54.796051Z",
-	"updated_at": "2022-12-14T20:10:54.796064Z",
-	"id": 1
+	"updated_at": "2022-12-14T20:10:54.796064Z"
 }
 ```
 ## Edit a Target Company
@@ -413,14 +413,14 @@ NOTE: "Only add the fields you want to change."
 ```json
 200 OK
 {
+	"pk": 1,
 	"company_name": "momentum",
 	"rank": null,
 	"website": "http://google.com",
 	"job_page": "http://google.com/job",
 	"comments": "They're alright",
 	"created_at": "2022-12-14T20:10:54.796051Z",
-	"updated_at": "2022-12-14T20:10:54.796064Z",
-	"id": 1
+	"updated_at": "2022-12-14T20:10:54.796064Z"
 }
 ```
 NOTE: Response should reflect changes
@@ -470,11 +470,11 @@ response: If response is the same as the information you provided creation was s
 ```json
 200 OK
 {
+	"pk": 1,
 	"company": 1,
 	"name": "joe",
 	"email": "joe@example.com",
-	"notes": "Joe likes to make his own deodorant",
-	"id": 1
+	"notes": "Joe likes to make his own deodorant"
 }
 ```
 ## Company Contact list
@@ -487,11 +487,11 @@ GET /target-company/contacts
 ```json
 200 OK
 {
+	"pk": 1,
 	"company": 1,
 	"name": "joe",
 	"email": "joe@example.com",
-	"notes": "Joe likes to make his own deodorant",
-	"id": 1
+	"notes": "Joe likes to make his own deodorant"
 }
 ```
 NOTE: This will be a list of all the users company contacts
@@ -504,11 +504,11 @@ GET /target-comapny/contact/pk    Ex: /target-company/contact/1
 ### Response
 ```json
 {
+	"pk": 1,
 	"company": 1,
 	"name": "joe",
 	"email": "joe@example.com",
-	"notes": "joe likes blueberry muffins",
-	"id": 1
+	"notes": "joe likes blueberry muffins"
 }
 ```
 ## Edit a Comany Contact
@@ -525,11 +525,11 @@ NOTE: "Only add the fields you want to change."
 ```json
 200 OK
 {
+	"pk": 1,
 	"company": 1,
 	"name": "joe",
 	"email": "joe@example.com",
-	"notes": "Joe hates blueberry muffins",
-	"id": 1
+	"notes": "Joe hates blueberry muffins"
 }
 ```
 NOTE: Response should reflect changes
@@ -540,11 +540,11 @@ Required fields: company, name
 ```json
 PUT /target-company/contact/pk
 {
+	"pk": 1,
 	"company": 1,
 	"name": "joe",
 	"email": "joe@example.com",
-	"notes": "joe likes blueberry muffins",
-	"id": 1
+	"notes": "joe likes blueberry muffins"
 }
 ```
 NOTE: This is essentially rebuilding the card you will still have to input other fields if you want to change them.
