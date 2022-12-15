@@ -132,6 +132,13 @@ class StarrQuestions(models.Model):
     reflection = models.TextField(max_length=500, null=True, blank=True)
     result = models.TextField(max_length=500, null=True, blank=True)
 
+class Job(models.Model):
+  title = models.CharField(max_length=50)
+  notes = models.TextField()
+  job_listing = models.URLField()
+  company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE, related_name='jobs')
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs')
+
 # Create CoverLetter model here
 class CoverLetter(models.Model):
     title = models.CharField(max_length=50)
@@ -139,7 +146,7 @@ class CoverLetter(models.Model):
     file = models.FileField(upload_to='coverletter')
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='cover_letters')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letters')
-
+    
 # Create Resume model here
 class Resume(models.Model):
     title = models.CharField(max_length=50, null=True, blank=True)
