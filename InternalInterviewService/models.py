@@ -134,14 +134,16 @@ class StarrQuestions(models.Model):
 
 # Create CoverLetter model here
 class CoverLetter(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     notes = models.TextField(max_length=5000, null=True, blank=True)
     file = models.FileField(upload_to='coverletter')
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='cover_letters')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letters')
 
 # Create Resume model here
 class Resume(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=50, null=True, blank=True)
     notes = models.TextField(max_length=5000, null=True, blank=True)
     file = models.FileField(upload_to='resume')
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='resumes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='resumes')
