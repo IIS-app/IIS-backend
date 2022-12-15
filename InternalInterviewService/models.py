@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
-# from django.db.models.fields import DateTimeField, DateField
+from django.db.models.fields import DateTimeField, DateField
 
 # Create your models here.
 # Create custom user manager here
@@ -68,7 +68,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Win(models.Model):
   title = models.CharField(max_length=50)
   created_date = models.DateTimeField(auto_now_add=True)
-  occured_date = models.DateField(null=True, blank=True)
+  occured_date = models.DateField(null=True, blank=True, auto_now_add=False)
   win = models.TextField()
   win_picture = models.ImageField(null=True, blank=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wins')
@@ -145,3 +145,15 @@ class Resume(models.Model):
     title = models.CharField(max_length=50, null=True, blank=True)
     notes = models.TextField(max_length=5000, null=True, blank=True)
     file = models.FileField(upload_to='resume')
+
+# Create Interview model here
+class Interview(models.Model):
+  title = models.CharField(max_length=50)
+  #job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='jobs')
+  notes = models.TextField()
+  date = models.DateField(null=True, blank=True, auto_now_add=False)
+  time = models.TimeField(null=True, blank=True, auto_now_add=False)
+  thank_you_letter = models.TextField()
+  file = models.FileField(upload_to='thank_you_letter')
+  questions_asked = models.TextField()
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='interviews')
