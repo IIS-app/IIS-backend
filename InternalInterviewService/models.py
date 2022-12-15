@@ -155,6 +155,16 @@ class Resume(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='resumes')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='resumes')
 
+class Dossier(models.Model):
+  title = models.CharField(max_length=50)
+  job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='dossiers')
+  resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='dossiers')
+  cover_letter = models.ForeignKey(CoverLetter, on_delete=models.CASCADE, related_name='dossiers')
+  starrs = manyToManyField(StarrQuestions)
+  questions = manyToManyField(Question)
+  wins = manyToManyField(Win)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='dossiers')
+
 # Create Goal model here
 class Goal(models.Model):
   title = models.CharField(max_length=50)
