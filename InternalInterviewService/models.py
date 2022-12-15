@@ -155,6 +155,15 @@ class Resume(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='resumes')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='resumes')
 
+# Create Goal model here
+class Goal(models.Model):
+  title = models.CharField(max_length=50)
+  number = models.PositiveIntegerField()
+  metric = models.CharField(max_length=50)
+  created_date = models.DateField(auto_now_add=True)
+  date_to_complete = models.DateField(blank=True, null=True, auto_now_add=False)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='goals')
+
 # Create Interview model here
 class Interview(models.Model):
   title = models.CharField(max_length=50)
