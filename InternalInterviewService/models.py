@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 from django.utils import timezone
 # from django.db.models.fields import DateTimeField, DateField
+
 # Create your models here.
 # Create custom user manager here
 class UserManager(BaseUserManager):
@@ -62,6 +63,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # personal_pitch
     # links
+
 # Create Win model here
 class Win(models.Model):
   title = models.CharField(max_length=50)
@@ -69,11 +71,30 @@ class Win(models.Model):
   occured_date = models.DateField(null=True, blank=True)
   win = models.TextField()
   win_picture = models.ImageField(null=True, blank=True)
-  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wins')
    
   def __str__(self):
         return self.title
 
+# Create Question model here
+# Come back and try to combine question models
+class Question(models.Model):
+  INTERVIEW_QUESTIONS = 'IQ'
+  COMPANY_QUESTIONS = 'CQ'
+  QUESTION_TYPE = [
+      (INTERVIEW_QUESTIONS, 'Interview Questions'),
+      (COMPANY_QUESTIONS, 'Company Questions'),
+  ]
+  question_type = models.CharField(
+      max_length=2,
+      choices=QUESTION_TYPE,
+      default=INTERVIEW_QUESTIONS)
+  question = models.CharField(max_length=50)
+  created_date = models.DateField(auto_now_add=True)
+  answer = models.TextField(null=True)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='questions')
+  
+# Create TargetCompany model here
 class TargetCompany(models.Model):
     RANK_CHOICES=[
         ('1', '1'),
@@ -92,6 +113,7 @@ class TargetCompany(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+# Create CompanyContacts model here
 class CompanyContacts(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(null=True, blank=True)
@@ -99,7 +121,7 @@ class CompanyContacts(models.Model):
     company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-
+# Create StarrQuestions model here
 class StarrQuestions(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.TextField(max_length=500)
@@ -110,24 +132,25 @@ class StarrQuestions(models.Model):
     reflection = models.TextField(max_length=500, null=True, blank=True)
     result = models.TextField(max_length=500, null=True, blank=True)
 
-
+# Create CoverLetter model here
 class CoverLetter(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     notes = models.TextField(max_length=5000, null=True, blank=True)
     file = models.FileField(upload_to='coverletter')
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='cover_letters')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letters')
 
+# Create Resume model here
 class Resume(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=50, null=True, blank=True)
     notes = models.TextField(max_length=5000, null=True, blank=True)
     file = models.FileField(upload_to='resume')
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='resumes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='resumes')
 
 class Job(models.Model):
   title = models.CharField(max_length=50)
   notes = models.TextField()
   job_listing = models.URLField()
-  # resumes = Resume.objects.all()
-  # cover_letters = CoverLetter.objects.all()
   company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='jobs')
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs')
