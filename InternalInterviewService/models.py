@@ -134,26 +134,28 @@ class StarrQuestions(models.Model):
 
 # Create CoverLetter model here
 class CoverLetter(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     notes = models.TextField(max_length=5000, null=True, blank=True)
     file = models.FileField(upload_to='coverletter')
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='cover_letters')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letters')
 
 # Create Resume model here
 class Resume(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=50, null=True, blank=True)
     notes = models.TextField(max_length=5000, null=True, blank=True)
     file = models.FileField(upload_to='resume')
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='resumes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='resumes')
 
 # Create Interview model here
 class Interview(models.Model):
   title = models.CharField(max_length=50)
-  # job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='jobs')
+  job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='jobs')
   notes = models.TextField()
   date = models.DateField(null=True, blank=True, auto_now_add=False)
   time = models.TimeField(null=True, blank=True, auto_now_add=False)
   thank_you_letter = models.TextField()
-  file = models.FileField(upload_to='thank_you_letter')
+  thank_you_letter_file = models.FileField(upload_to='thank_you_letter')
   questions_asked = models.TextField()
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='interviews')
