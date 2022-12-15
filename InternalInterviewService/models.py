@@ -73,6 +73,7 @@ class Win(models.Model):
         return self.title
 
 # Create Question model here
+# Come back and try to combine question models
 class Question(models.Model):
   INTERVIEW_QUESTIONS = 'IQ'
   COMPANY_QUESTIONS = 'CQ'
