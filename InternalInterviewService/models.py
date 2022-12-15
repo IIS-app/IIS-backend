@@ -122,3 +122,12 @@ class Resume(models.Model):
     title = models.CharField(max_length=50, null=True, blank=True)
     notes = models.TextField(max_length=5000, null=True, blank=True)
     file = models.FileField(upload_to='resume')
+
+class Job(models.Model):
+  title = models.CharField(max_length=50)
+  notes = models.TextField()
+  job_listing = models.URLField()
+  # resumes = Resume.objects.all()
+  # cover_letters = CoverLetter.objects.all()
+  company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='jobs')
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs')
