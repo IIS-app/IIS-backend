@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.db.models.fields import DateTimeField, DateField
 
 # Create your models here.
+
 # Create custom user manager here
 class UserManager(BaseUserManager):
   def _create_user(self, email, password, is_staff, is_superuser, **extra_fields):
@@ -64,20 +65,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # personal_pitch
     # links
 
-# Create Win model here
-class Win(models.Model):
-  title = models.CharField(max_length=50)
-  created_date = models.DateTimeField(auto_now_add=True)
-  occured_date = models.DateField(null=True, blank=True, auto_now_add=False)
-  win = models.TextField()
-  win_picture = models.ImageField(null=True, blank=True)
-  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wins')
-   
-  def __str__(self):
-        return self.title
-
 # Create Question model here
-# Come back and try to combine question models
 class Question(models.Model):
   INTERVIEW_QUESTIONS = 'IQ'
   COMPANY_QUESTIONS = 'CQ'
@@ -94,6 +82,29 @@ class Question(models.Model):
   answer = models.TextField(null=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='questions')
   
+# Create StarrQuestions model here
+class StarrQuestions(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.TextField(max_length=500)
+    summary = models.TextField(max_length=1000, null=True, blank=True)
+    situation = models.TextField(max_length=500, null=True, blank=True)
+    task = models.TextField(max_length=500, null=True, blank=True)
+    action = models.TextField(max_length=500, null=True, blank=True)
+    reflection = models.TextField(max_length=500, null=True, blank=True)
+    result = models.TextField(max_length=500, null=True, blank=True)
+
+# Create Win model here
+class Win(models.Model):
+  title = models.CharField(max_length=50)
+  created_date = models.DateTimeField(auto_now_add=True)
+  occured_date = models.DateField(null=True, blank=True, auto_now_add=False)
+  win = models.TextField()
+  win_picture = models.ImageField(null=True, blank=True)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wins')
+   
+  def __str__(self):
+        return self.title
+
 # Create TargetCompany model here
 class TargetCompany(models.Model):
     RANK_CHOICES=[
@@ -121,17 +132,7 @@ class CompanyContacts(models.Model):
     company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-# Create StarrQuestions model here
-class StarrQuestions(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    question = models.TextField(max_length=500)
-    summary = models.TextField(max_length=1000, null=True, blank=True)
-    situation = models.TextField(max_length=500, null=True, blank=True)
-    task = models.TextField(max_length=500, null=True, blank=True)
-    action = models.TextField(max_length=500, null=True, blank=True)
-    reflection = models.TextField(max_length=500, null=True, blank=True)
-    result = models.TextField(max_length=500, null=True, blank=True)
-
+# Create Job model here
 class Job(models.Model):
   title = models.CharField(max_length=50)
   notes = models.TextField()
@@ -139,31 +140,44 @@ class Job(models.Model):
   company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE, related_name='jobs')
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs')
 
-# Create CoverLetter model here
-class CoverLetter(models.Model):
-    title = models.CharField(max_length=50)
-    notes = models.TextField(max_length=5000, null=True, blank=True)
-    file = models.FileField(upload_to='coverletter')
-    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='cover_letters')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letters')
-    
 # Create Resume model here
 class Resume(models.Model):
     title = models.CharField(max_length=50, null=True, blank=True)
     notes = models.TextField(max_length=5000, null=True, blank=True)
     file = models.FileField(upload_to='resume')
-    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='resumes')
+    job = models.ForeignKey(Job, null=True, on_delete=models.CASCADE, related_name='resumes')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='resumes')
 
+# Create CoverLetter model here
+class CoverLetter(models.Model):
+    title = models.CharField(max_length=50)
+    notes = models.TextField(max_length=5000, null=True, blank=True)
+    file = models.FileField(upload_to='coverletter')
+    job = models.ForeignKey(Job, null=True, on_delete=models.CASCADE, related_name='cover_letters')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letters')
+    
+#Create Dossier model here
 class Dossier(models.Model):
   title = models.CharField(max_length=50)
   job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='dossiers')
   resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='dossiers')
   cover_letter = models.ForeignKey(CoverLetter, on_delete=models.CASCADE, related_name='dossiers')
-  starrs = manyToManyField(StarrQuestions)
-  questions = manyToManyField(Question)
-  wins = manyToManyField(Win)
+  starrs = models.ManyToManyField(StarrQuestions)
+  questions = models.ManyToManyField(Question)
+  wins = models.ManyToManyField(Win)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='dossiers')
+
+# Create Interview model here
+class Interview(models.Model):
+  title = models.CharField(max_length=50)
+  job = models.ForeignKey(Job, null=True, on_delete=models.CASCADE, related_name='jobs')
+  notes = models.TextField()
+  date = models.DateField(null=True, blank=True, auto_now_add=False)
+  time = models.TimeField(null=True, blank=True, auto_now_add=False)
+  thank_you_letter = models.TextField()
+  thank_you_letter_file = models.FileField(upload_to='thank_you_letter')
+  questions_asked = models.TextField()
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='interviews')
 
 # Create Goal model here
 class Goal(models.Model):
@@ -174,14 +188,3 @@ class Goal(models.Model):
   date_to_complete = models.DateField(blank=True, null=True, auto_now_add=False)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='goals')
 
-# Create Interview model here
-class Interview(models.Model):
-  title = models.CharField(max_length=50)
-  job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='jobs')
-  notes = models.TextField()
-  date = models.DateField(null=True, blank=True, auto_now_add=False)
-  time = models.TimeField(null=True, blank=True, auto_now_add=False)
-  thank_you_letter = models.TextField()
-  thank_you_letter_file = models.FileField(upload_to='thank_you_letter')
-  questions_asked = models.TextField()
-  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='interviews')
