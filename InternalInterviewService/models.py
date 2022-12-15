@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 from django.utils import timezone
 # from django.db.models.fields import DateTimeField, DateField
+
 # Create your models here.
 # Create custom user manager here
 class UserManager(BaseUserManager):
@@ -62,6 +63,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # personal_pitch
     # links
+
 # Create Win model here
 class Win(models.Model):
   title = models.CharField(max_length=50)
@@ -74,6 +76,7 @@ class Win(models.Model):
   def __str__(self):
         return self.title
 
+# Create TargetCompany model here
 class TargetCompany(models.Model):
     RANK_CHOICES=[
         ('1', '1'),
@@ -92,6 +95,7 @@ class TargetCompany(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+# Create CompanyContacts model here
 class CompanyContacts(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(null=True, blank=True)
@@ -99,7 +103,7 @@ class CompanyContacts(models.Model):
     company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-
+# Create StarrQuestions model here
 class StarrQuestions(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.TextField(max_length=500)
@@ -110,13 +114,14 @@ class StarrQuestions(models.Model):
     reflection = models.TextField(max_length=500, null=True, blank=True)
     result = models.TextField(max_length=500, null=True, blank=True)
 
-
+# Create CoverLetter model here
 class CoverLetter(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     notes = models.TextField(max_length=5000, null=True, blank=True)
     file = models.FileField(upload_to='coverletter')
 
+# Create Resume model here
 class Resume(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=50, null=True, blank=True)
