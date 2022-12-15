@@ -149,7 +149,7 @@ class Resume(models.Model):
 # Create Interview model here
 class Interview(models.Model):
   title = models.CharField(max_length=50)
-  #job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='jobs')
+  # job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='jobs')
   notes = models.TextField()
   date = models.DateField(null=True, blank=True, auto_now_add=False)
   time = models.TimeField(null=True, blank=True, auto_now_add=False)
