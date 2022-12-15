@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
-# from django.db.models.fields import DateTimeField, DateField
+from django.db.models.fields import DateTimeField, DateField
 
 # Create your models here.
 # Create custom user manager here
@@ -68,7 +68,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Win(models.Model):
   title = models.CharField(max_length=50)
   created_date = models.DateTimeField(auto_now_add=True)
-  occured_date = models.DateField(null=True, blank=True)
+  occured_date = models.DateField(null=True, blank=True, auto_now_add=False)
   win = models.TextField()
   win_picture = models.ImageField(null=True, blank=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wins')
@@ -132,6 +132,13 @@ class StarrQuestions(models.Model):
     reflection = models.TextField(max_length=500, null=True, blank=True)
     result = models.TextField(max_length=500, null=True, blank=True)
 
+class Job(models.Model):
+  title = models.CharField(max_length=50)
+  notes = models.TextField()
+  job_listing = models.URLField()
+  company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE, related_name='jobs')
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs')
+
 # Create CoverLetter model here
 class CoverLetter(models.Model):
     title = models.CharField(max_length=50)
@@ -139,7 +146,7 @@ class CoverLetter(models.Model):
     file = models.FileField(upload_to='coverletter')
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='cover_letters')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letters')
-
+    
 # Create Resume model here
 class Resume(models.Model):
     title = models.CharField(max_length=50, null=True, blank=True)
@@ -157,3 +164,24 @@ class Dossier(models.Model):
   questions = manyToManyField(Question)
   wins = manyToManyField(Win)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='dossiers')
+
+# Create Goal model here
+class Goal(models.Model):
+  title = models.CharField(max_length=50)
+  number = models.PositiveIntegerField()
+  metric = models.CharField(max_length=50)
+  created_date = models.DateField(auto_now_add=True)
+  date_to_complete = models.DateField(blank=True, null=True, auto_now_add=False)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='goals')
+
+# Create Interview model here
+class Interview(models.Model):
+  title = models.CharField(max_length=50)
+  job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='jobs')
+  notes = models.TextField()
+  date = models.DateField(null=True, blank=True, auto_now_add=False)
+  time = models.TimeField(null=True, blank=True, auto_now_add=False)
+  thank_you_letter = models.TextField()
+  thank_you_letter_file = models.FileField(upload_to='thank_you_letter')
+  questions_asked = models.TextField()
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='interviews')
