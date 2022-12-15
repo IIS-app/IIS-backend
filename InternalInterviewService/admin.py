@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Win, Question, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Interview, Job
+from .models import User, Win, Question, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Interview, Job, Dossier, Goal
 
 # Register your models here.
 
@@ -13,3 +13,5 @@ admin.site.register(CoverLetter)
 admin.site.register(Resume)
 admin.site.register(Interview)
 admin.site.register(Job)
+admin.site.register(Dossier)
+admin.site.register(Goal)
