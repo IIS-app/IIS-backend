@@ -123,7 +123,8 @@ response: If response is the same as the information you provided creation was s
 	"win": "Example win",
 	"win_picture": null,
 	"created_date": "2022-12-14T22:15:58.544331Z",
-	"occured_date": "2022-12-25"
+	"occured_date": "2022-12-25",
+	"id": 1
 }
 ```
 ## Win info
@@ -140,13 +141,14 @@ GET /wins/
 	"win": "Example Win",
 	"win_picture": "This-will-be-a-file.jpeg",
 	"created_date": "2022-12-14T16:04:04.967360Z",
-	"occured_date": "2022-06-29"
+	"occured_date": "2022-06-29",
+	"id": 1
 }
 ```
 NOTE: This will be a list of all the users wins
 ## Win Detail
 ### Request
-Requirement: user must be logged in
+Requirement: user must be logged in, must be owner
 ```json
 GET /wins/pk    Ex: /wins/1
 ```
@@ -157,12 +159,13 @@ GET /wins/pk    Ex: /wins/1
 	"win": "Example win",
 	"win_picture": null,
 	"created_date": "2022-12-14T22:15:58.544331Z",
-	"occured_date": "2022-12-25"
+	"occured_date": "2022-12-25",
+	"id": 1
 }
 ```
 ## Edit a Win
 ### Request
-Requirement: user must be logged in
+Requirement: user must be logged in, must be owner
 ```json
 PTCH /wins/pk
 ```
@@ -175,12 +178,13 @@ NOTE: "Only add the fields you want to change."
 	"win": "Example win",
 	"win_picture": null,
 	"created_date": "2022-12-14T22:15:58.544331Z",
-	"occured_date": "2022-12-25"
+	"occured_date": "2022-12-25",
+	"id": 1
 }
 ```
 ## Edit a Win(Second way)
 ### Request
-Requirement: user must be logged in
+Requirement: user must be logged in, must be owner
 Required fields: Title, Win
 ```json
 PUT /wins/pk
@@ -192,7 +196,7 @@ PUT /wins/pk
 NOTE: This is essentially rebuilding the card you will still have to input other fields if you want to change them.
 ## Delete a Win
 ### Request
-Requirement: user must be logged in
+Requirement: user must be logged in, must be owner
 ```json
 DELETE /wins/pk
 ```
@@ -228,7 +232,8 @@ response: If response is the same as the information you provided creation was s
 	"task": "What tast",
 	"action": "What action",
 	"reflection": "What reflection",
-	"result": "What result"
+	"result": "What result",
+	"id": 1
 }
 ```
 ## Starr Story list
@@ -247,13 +252,14 @@ GET /starr-stories/
 	"task": "What tast",
 	"action": "What action",
 	"reflection": "What reflection",
-	"result": "What result"
+	"result": "What result",
+	"id": 1
 }
 ```
 NOTE: This will be a list of all the users Starr Stories
 ## Starr Story Detail
 ### Request
-Requirement: user must be logged in
+Requirement: user must be logged in, must be owner
 ```json
 GET /starr-stories/pk    Ex: /starr-stories/1
 ```
@@ -266,12 +272,13 @@ GET /starr-stories/pk    Ex: /starr-stories/1
 	"task": "What tast",
 	"action": "What action",
 	"reflection": "What reflection",
-	"result": "What result"
+	"result": "What result",
+	"id": 1
 }
 ```
 ## Edit a Starr Story
 ### Request
-Requirement: user must be logged in
+Requirement: user must be logged in, must be owner
 ```json
 PTCH /starr-stories/pk
 ```
@@ -286,13 +293,14 @@ NOTE: "Only add the fields you want to change."
 	"task": "What tast",
 	"action": "What action",
 	"reflection": "What reflection",
-	"result": "What result"
+	"result": "What result",
+	"id": 1
 }
 ```
 NOTE: Response should reflect changes
 ## Edit a Starr story(Second way)
 ### Request
-Requirement: user must be logged in
+Requirement: user must be logged in, must be owner
 Required fields: Question
 ```json
 PUT /starr-stories/pk
@@ -309,7 +317,7 @@ PUT /starr-stories/pk
 NOTE: This is essentially rebuilding the card you will still have to input other fields if you want to change them.
 ## Delete a Starr Story
 ### Request
-Requirement: user must be logged in
+Requirement: user must be logged in, must be owner
 ```json
 DELETE /starr-stories/pk
 ```
@@ -325,13 +333,14 @@ required fields: company_name, website
 ```json
 POST /target-company/
 {
-		"company_name": "google",
-		"rank": 1,
-		"website": "http://google.com",
-		"job_page": "http://google.com/job",
-		"comments": "They're alright",
-		"created_at": "2022-12-14T20:10:54.796051Z",
-		"updated_at": "2022-12-14T20:10:54.796064Z"
+	"company_name": "google",
+	"rank": 1,
+	"website": "http://google.com",
+	"job_page": "http://google.com/job",
+	"comments": "They're alright",
+	"created_at": "2022-12-14T20:10:54.796051Z",
+	"updated_at": "2022-12-14T20:10:54.796064Z",
+	"id": 1
 }
 ```
 NOTE: Rank has a choice to be 1-5 but users can select multiple companies to a single rank
@@ -340,13 +349,14 @@ response: If response is the same as the information you provided creation was s
 ```json
 200 OK
 {
-		"company_name": "google",
-		"rank": null,
-		"website": "http://google.com",
-		"job_page": "http://google.com/job",
-		"comments": "They're alright",
-		"created_at": "2022-12-14T20:10:54.796051Z",
-		"updated_at": "2022-12-14T20:10:54.796064Z"
+	"company_name": "google",
+	"rank": null,
+	"website": "http://google.com",
+	"job_page": "http://google.com/job",
+	"comments": "They're alright",
+	"created_at": "2022-12-14T20:10:54.796051Z",
+	"updated_at": "2022-12-14T20:10:54.796064Z",
+	"id": 1
 }
 ```
 ## Target Company list
@@ -365,13 +375,14 @@ GET /target-company/
 	"job_page": "http://google.com/job",
 	"comments": "They're alright",
 	"created_at": "2022-12-14T20:10:54.796051Z",
-	"updated_at": "2022-12-14T20:10:54.796064Z"
+	"updated_at": "2022-12-14T20:10:54.796064Z",
+	"id": 1
 }
 ```
 NOTE: This will be a list of all the users Target Companies
 ## Target Company Detail
 ### Request
-Requirement: user must be logged in
+Requirement: user must be logged in, must be owner
 ```json
 GET /target-comapny/pk    Ex: /target-company/1
 ```
@@ -384,33 +395,38 @@ GET /target-comapny/pk    Ex: /target-company/1
 	"job_page": "http://google.com/job",
 	"comments": "They're alright",
 	"created_at": "2022-12-14T20:10:54.796051Z",
-	"updated_at": "2022-12-14T20:10:54.796064Z"
+	"updated_at": "2022-12-14T20:10:54.796064Z",
+	"id": 1
 }
 ```
 ## Edit a Target Company
 ### Request
-Requirement: user must be logged in
+Requirement: user must be logged in, must be owner
 ```json
 PTCH /target-company/pk
+{
+	"company_name": "momentum",
+}
 ```
 NOTE: "Only add the fields you want to change."
 ## Response
 ```json
 200 OK
 {
-	"company_name": "google",
+	"company_name": "momentum",
 	"rank": null,
 	"website": "http://google.com",
 	"job_page": "http://google.com/job",
 	"comments": "They're alright",
 	"created_at": "2022-12-14T20:10:54.796051Z",
-	"updated_at": "2022-12-14T20:10:54.796064Z"
+	"updated_at": "2022-12-14T20:10:54.796064Z",
+	"id": 1
 }
 ```
 NOTE: Response should reflect changes
 ## Edit a Starr story(Second way)
 ### Request
-Requirement: user must be logged in
+Requirement: user must be logged in, must be owner
 Required fields: company_name, website
 ```json
 PUT /target-company/pk
@@ -427,7 +443,7 @@ PUT /target-company/pk
 NOTE: This is essentially rebuilding the card you will still have to input other fields if you want to change them.
 ## Delete a Target Company
 ### Request
-Requirement: user must be logged in
+Requirement: user must be logged in, must be owner
 ```json
 DELETE /target-company/pk
 ```
@@ -457,7 +473,8 @@ response: If response is the same as the information you provided creation was s
 	"company": 1,
 	"name": "joe",
 	"email": "joe@example.com",
-	"notes": "Joe likes to make his own deodorant"
+	"notes": "Joe likes to make his own deodorant",
+	"id": 1
 }
 ```
 ## Company Contact list
@@ -473,7 +490,70 @@ GET /target-company/contacts
 	"company": 1,
 	"name": "joe",
 	"email": "joe@example.com",
-	"notes": "Joe likes to make his own deodorant"
+	"notes": "Joe likes to make his own deodorant",
+	"id": 1
 }
 ```
 NOTE: This will be a list of all the users company contacts
+## Company Contact Detail
+### Request
+Requirement: user must be logged in, must be owner
+```json
+GET /target-comapny/contact/pk    Ex: /target-company/contact/1
+```
+### Response
+```json
+{
+	"company": 1,
+	"name": "joe",
+	"email": "joe@example.com",
+	"notes": "joe likes blueberry muffins",
+	"id": 1
+}
+```
+## Edit a Comany Contact
+### Request
+Requirement: user must be logged in, must be owner
+```json
+PTCH /target-company/contact/pk
+{
+	"notes": "Joe hates blueberry muffins",
+}
+```
+NOTE: "Only add the fields you want to change."
+## Response
+```json
+200 OK
+{
+	"company": 1,
+	"name": "joe",
+	"email": "joe@example.com",
+	"notes": "Joe hates blueberry muffins",
+	"id": 1
+}
+```
+NOTE: Response should reflect changes
+## Edit a Company Contact(Second way)
+### Request
+Requirement: user must be logged in, must be owner
+Required fields: company, name
+```json
+PUT /target-company/contact/pk
+{
+	"company": 1,
+	"name": "joe",
+	"email": "joe@example.com",
+	"notes": "joe likes blueberry muffins",
+	"id": 1
+}
+```
+NOTE: This is essentially rebuilding the card you will still have to input other fields if you want to change them.
+## Delete a Target Company
+### Request
+Requirement: user must be logged in, must be owner
+```json
+DELETE /target-company/contact/pk
+```
+## Response
+```json
+204 No Content

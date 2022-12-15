@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated 
 from .serializers import WinSerializer, TargetCompanySerializer, CompanyContactsSerializer, StarrQuestionsSerializer, CoverLetterSerializer, ResumeSerializer
 from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume
+from .permissions import IsOwner
 
 # Create views here
 
@@ -34,7 +35,7 @@ class CompanyContactsView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
     def get_queryset(self):
-        return CompanyContactsSerializer.objects.filter(user=self.request.user)
+        return CompanyContacts.objects.filter(user=self.request.user)
 
 class StarrQuestionsView(generics.ListCreateAPIView):
     queryset = StarrQuestions.objects.all()
@@ -69,25 +70,30 @@ class ResumeView(generics.ListCreateAPIView):
 class WinDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Win.objects.all()
     serializer_class = WinSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
 class TargetCompanyDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = TargetCompany.objects.all()
     serializer_class = TargetCompanySerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
+
+class CompanyContactsDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CompanyContacts.objects.all()
+    serializer_class = CompanyContactsSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
 
 class StarrQuestionsDetial(generics.RetrieveUpdateDestroyAPIView):
     queryset = StarrQuestions.objects.all()
     serializer_class = StarrQuestionsSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
 class CoverLetterDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = CoverLetter.objects.all()
     serializer_class = CoverLetterSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
 class ResumeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Resume.objects.all()
     serializer_class = ResumeSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
