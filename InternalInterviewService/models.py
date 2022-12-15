@@ -122,3 +122,7 @@ class Resume(models.Model):
     title = models.CharField(max_length=50, null=True, blank=True)
     notes = models.TextField(max_length=5000, null=True, blank=True)
     file = models.FileField(upload_to='resume')
+
+# Create Goal model here
+class Goal(models.Model):
+  
