@@ -188,3 +188,17 @@ class Goal(models.Model):
   date_to_complete = models.DateField(blank=True, null=True, auto_now_add=False)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='goals')
 
+class ShortPersonalPitch(models.Model):
+    title = models.CharField(max_length=50)
+    user =  models.ForeignKey(User, on_delete=models.CASCADE, related_name='short-personal-pitch')
+    pitch = models.TextField(max_length=650)
+
+class LongPersonalPitch(models.Model):
+    title = models.CharField(max_length=50)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='long-personal-pitch')
+    pitch = models.TextField(max_length=1300)
+
+class Links(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='links')
+    title = models.CharField(max_length=20)
+    link = models.URLField()
