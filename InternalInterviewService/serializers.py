@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links
+from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links, CompanyComments, JobComments
 
 class WinSerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,3 +54,12 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = ('pk', 'question_type', 'question', 'answer')
 
 
+class CompanyCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompanyComments
+        fields = ( 'pk', 'created_at', 'updated_at', 'company', 'notes', 'important_date', 'contact')
+
+class JobCommentSerializer(serializers.ModelSerializer):
+    class meta:
+        model = JobComments
+        fields = ('pk', 'created_at', 'updated_at', 'job', 'notes', 'important_date')

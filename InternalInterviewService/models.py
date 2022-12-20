@@ -189,15 +189,32 @@ class Goal(models.Model):
 
 class ShortPersonalPitch(models.Model):
     title = models.CharField(max_length=50)
-    user =  models.ForeignKey(User, on_delete=models.CASCADE, related_name='short-personal-pitch')
+    user =  models.ForeignKey(User, on_delete=models.CASCADE, related_name='short_personal_pitch')
     pitch = models.TextField(max_length=650)
 
 class LongPersonalPitch(models.Model):
     title = models.CharField(max_length=50)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='long-personal-pitch')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='long_personal_pitch')
     pitch = models.TextField(max_length=1300)
 
 class Links(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='links')
     title = models.CharField(max_length=20)
     link = models.URLField()
+
+class CompanyComments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='company_comments')
+    company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE, related_name='company_comments')
+    contact = models.ForeignKey(CompanyContacts, on_delete=models.CASCADE, related_name='comment_contact', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    important_date = models.DateTimeField(blank=True, null=True)
+    notes = models.TextField()
+
+class JobComments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="job_comments")
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='job_comments')
+    created_at = models.DateTimeField(auto_now_add=True),
+    updated_at = models.DateTimeField(auto_now= True)
+    important_date = models.DateTimeField(blank=True,null=True)
+    notes = models.TextField()
