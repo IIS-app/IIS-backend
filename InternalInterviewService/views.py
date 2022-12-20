@@ -67,11 +67,8 @@ class ResumeView(generics.ListCreateAPIView):
     def get_queryset(self):
         return Resume.objects.filter(user=self.request.user)
 
-
 class InterviewQuestionView(generics.ListCreateAPIView):
-    queryset = Question.objects.all()
-    
-
+    queryset = Question.objects.filter(question_type = 'IQ')
     serializer_class = QuestionSerializer
 
     def perform_create(self, serializer):
