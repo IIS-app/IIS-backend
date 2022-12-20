@@ -119,7 +119,7 @@ response: If response is the same as the information you provided creation was s
 ```json
 200 OK
 {
-	"pk": 1
+	"pk": 1,
 	"title": "Example title",
 	"win": "Example win",
 	"win_picture": null,
@@ -424,7 +424,7 @@ NOTE: "Only add the fields you want to change."
 }
 ```
 NOTE: Response should reflect changes
-## Edit a Starr story(Second way)
+## Edit a Target Company(Second way)
 ### Request
 Requirement: user must be logged in, must be owner
 Required fields: company_name, website
@@ -557,3 +557,290 @@ DELETE /target-company/contact/pk
 ## Response
 ```json
 204 No Content
+```
+
+## Create a Short Personal Pitch
+### Request
+requirements: user must be logged in
+required fields: title, pitch
+```json
+POST /personal-pitch/short/
+{
+	"title": "Example title",
+	"pitch": "I am great! You should hire me",
+
+}
+```
+### Response
+response: If response is the same as the information you provided creation was successful
+```json
+200 OK
+{
+	"pk": 1,
+	"title": "Example title",
+	"pitch": "I am great! You should hire me",
+}
+```
+## Short Personal Pitch info
+### Request
+Requirement: user must be logged in
+```json
+GET /person-pitch/short
+```
+### Response
+```json
+200 OK
+{
+	"pk": 1,
+	"title": "Example title",
+	"pitch": "I am great! You should hire me",
+}
+```
+NOTE: This will be a list of all the users short personal pitch
+## Short Personal Pitch Detail
+### Request
+Requirement: user must be logged in, must be owner
+```json
+GET /personal-pitch/short/pk    
+```
+### Response
+```json
+{
+	"pk": 1,
+	"title": "Example title",
+	"pitch": "I am great! You should hire me"
+}
+```
+## Edit a Short personal pitch
+### Request
+Requirement: user must be logged in, must be owner
+```json
+PTCH /personal-pitch/short/pk
+{
+	"title": "Number one pitch"
+}
+```
+NOTE: "Only add the fields you want to change."
+## Response
+```json
+200 OK
+{
+	"pk": 1,
+	"title": "Number one pitch",
+	"pitch": "I am great! You should hire me",
+}
+```
+NOTE: Response should reflect changes
+## Edit a short personal pitch(Second way)
+### Request
+Requirement: user must be logged in, must be owner
+Required fields: title, pitch
+```json
+PUT /personal-pitch/short/pk
+{
+	"title": "Number one pitch",
+	"pitch": "I am great! You should hire me",
+}
+```
+NOTE: This is essentially rebuilding the card you will still have to input other fields if you want to change them.
+## Delete a short personal pitch
+### Request
+Requirement: user must be logged in, must be owner
+```json
+DELETE /personal-pitch/short/pk
+```
+## Response
+```json
+204 No Content
+```
+## Create a Long Personal Pitch
+### Request
+requirements: user must be logged in
+required fields: title, pitch
+```json
+POST /personal-pitch/long/
+{
+	"title": "Example title",
+	"pitch": "I am great! You should hire me",
+
+}
+```
+### Response
+response: If response is the same as the information you provided creation was successful
+```json
+200 OK
+{
+	"pk": 1,
+	"title": "Example title",
+	"pitch": "I am great! You should hire me",
+}
+```
+## Long Personal Pitch info
+### Request
+Requirement: user must be logged in
+```json
+GET /person-pitch/long/
+```
+### Response
+```json
+200 OK
+{
+	"pk": 1,
+	"title": "Example title",
+	"pitch": "I am great! You should hire me",
+}
+```
+NOTE: This will be a list of all the users long personal pitch
+## long Personal Pitch Detail
+### Request
+Requirement: user must be logged in, must be owner
+```json
+GET /personal-pitch/long/pk    
+```
+### Response
+```json
+{
+	"pk": 1,
+	"title": "Example title",
+	"pitch": "I am great! You should hire me"
+}
+```
+## Edit a long personal pitch
+### Request
+Requirement: user must be logged in, must be owner
+```json
+PTCH /personal-pitch/long/pk
+{
+	"title": "Number one pitch"
+}
+```
+NOTE: "Only add the fields you want to change."
+## Response
+```json
+200 OK
+{
+	"pk": 1,
+	"title": "Number one pitch",
+	"pitch": "I am great! You should hire me",
+}
+```
+NOTE: Response should reflect changes
+## Edit a long personal pitch(Second way)
+### Request
+Requirement: user must be logged in, must be owner
+Required fields: title, pitch
+```json
+PUT /personal-pitch/long/pk
+{
+	"title": "Number one pitch",
+	"pitch": "I am great! You should hire me",
+}
+```
+NOTE: This is essentially rebuilding the card you will still have to input other fields if you want to change them.
+## Delete a long personal pitch
+### Request
+Requirement: user must be logged in, must be owner
+```json
+DELETE /personal-pitch/long/pk
+```
+## Response
+```json
+204 No Content
+```
+## Create a Link
+### Request
+requirements: user must be logged in
+required fields: title, link
+```json
+POST /user/link/
+{
+	"title": "Github",
+	"link": "https://github.com/IIS-app/",
+
+}
+```
+### Response
+response: If response is the same as the information you provided creation was successful
+```json
+200 OK
+{
+	"pk": 1,
+	"title": "Github",
+	"link": "https://github.com/IIS-app/",
+}
+```
+## link info
+### Request
+Requirement: user must be logged in
+```json
+GET /user/link
+```
+### Response
+```json
+200 OK
+{
+	"pk": 1,
+	"title": "Github",
+	"link": "https://github.com/IIS-app/",
+}
+```
+NOTE: This will be a list of all the users wins
+
+
+
+## Link Detail
+### Request
+Requirement: user must be logged in, must be owner
+```json
+GET /user/link/pk    
+```
+### Response
+```json
+{
+	"pk": 1,
+	"title": "Github",
+	"link": "https://github.com/IIS-app",
+}
+```
+## Edit a link
+### Request
+Requirement: user must be logged in, must be owner
+```json
+PTCH /user/link/pk
+{
+	"link": "https://github.com/IIS-app/IIS-backend"
+}
+```
+NOTE: "Only add the fields you want to change."
+## Response
+```json
+200 OK
+{
+	"pk": 1,
+	"title": "Github",
+	"link": "https://github.com/IIS-app/IIS-backend",
+}
+```
+NOTE: Response should reflect changes
+## Edit a link(Second way)
+### Request
+Requirement: user must be logged in, must be owner
+Required fields: title, link
+```json
+PUT /user/link/pk
+{
+	"title": "Github",
+	"link": "https://github.com/IIS-app/IIS-backend",
+}
+```
+NOTE: This is essentially rebuilding the card you will still have to input other fields if you want to change them.
+## Delete a link
+### Request
+Requirement: user must be logged in, must be owner
+```json
+DELETE /user/link/pk
+```
+## Response
+```json
+204 No Content
+```

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question
+from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links
 
 class WinSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,6 +30,23 @@ class ResumeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Resume
         fields = ('pk', 'title', 'notes', 'file')
+
+class ShortPersonalPitchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShortPersonalPitch
+        fields = ('pk', 'title', 'pitch')
+
+class LongPersonalPitchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LongPersonalPitch
+        fields = ('pk', 'title', 'pitch')
+
+class LinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Links
+        fields = ('pk', 'title', 'link')
+    
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
