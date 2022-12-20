@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated 
-from .serializers import WinSerializer, TargetCompanySerializer, CompanyContactsSerializer, StarrQuestionsSerializer, CoverLetterSerializer, ResumeSerializer, ShortPersonalPitchSerializer, LongPersonalPitchSerializer, LinkSerializer
-from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, ShortPersonalPitch, LongPersonalPitch, Links
+from .serializers import WinSerializer, TargetCompanySerializer, CompanyContactsSerializer, StarrQuestionsSerializer, CoverLetterSerializer, ResumeSerializer, QuestionSerializer, ShortPersonalPitchSerializer, LongPersonalPitchSerializer, LinkSerializer
+from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links
 from .permissions import IsOwner
 
 # Create views here
@@ -66,6 +66,26 @@ class ResumeView(generics.ListCreateAPIView):
     
     def get_queryset(self):
         return Resume.objects.filter(user=self.request.user)
+
+class InterviewQuestionView(generics.ListCreateAPIView):
+    queryset = Question.objects.filter(question_type = 'IQ')
+    serializer_class = QuestionSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        return Question.objects.filter(user=self.request.user.id)
+
+class CompanyQuestionView(generics.ListCreateAPIView):
+    queryset = Question.objects.filter(question_type = 'CQ')
+    serializer_class = QuestionSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        return Question.objects.filter(user=self.request.user.id)
 
 class ShortPersonalPitchView(generics.ListCreateAPIView):
     queryset = ShortPersonalPitch.objects.all()
@@ -144,3 +164,12 @@ class ResumeDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ResumeSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 
+class InterviewQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Question.objects.filter(question_type = 'IQ')
+    serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+class CompanyQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Question.objects.filter(question_type = 'CQ')
+    serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticated, IsOwner]

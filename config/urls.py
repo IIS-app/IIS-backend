@@ -24,7 +24,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('wins/', views.WinView.as_view(), name='win-list'),
     path('wins/<int:pk>', views.WinDetail.as_view(), name='win-detail'),
-    path('target-compay/', views.TargetCompanyView.as_view(), name='target-co-list'),
+    path('target-company/', views.TargetCompanyView.as_view(), name='target-co-list'),
     path('target-company/<int:pk>', views.TargetCompanyDetail.as_view(), name='target-co-detail'),
     path('target-company/contacts/', views.CompanyContactsView.as_view(), name='contact-list'),
     path('target-company/contacts/<int:pk>', views.CompanyContactsDetail.as_view(), name='contact-detail'),
@@ -39,5 +39,10 @@ urlpatterns = [
     path('personal-pitch/long/', views.LongPersonalPitchView.as_view(), name='long-personal-pitch'),
     path('personal-pitch/long/<int:pk>', views.LongPersonalPitchDetail.as_view(), name='long-personal-pitch-detail'),
     path('user/links/', views.LinksView.as_view(), name='links'),
-    path('user/links/<int:pk>', views.LinkDetail.as_view(), name='links-detail')
+    path('user/links/<int:pk>', views.LinkDetail.as_view(), name='links-detail'),
+    path('interview-question/', views.InterviewQuestionView.as_view(), name='interview-question'),
+    path('company-question/', views.CompanyQuestionView.as_view(), name='company-question'),
+    path('interview-question/<int:pk>', views.InterviewQuestionDetail.as_view(), name='interview-question-detail'),
+    path('company-question/<int:pk>', views.CompanyQuestionDetail.as_view(), name='company-question-detail'),
+    
 ]

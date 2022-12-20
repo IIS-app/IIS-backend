@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, ShortPersonalPitch, LongPersonalPitch, Links
+from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links
 
 class WinSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,6 +48,9 @@ class LinkSerializer(serializers.ModelSerializer):
     
 
 
-
+class QuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = ('pk', 'question_type', 'question', 'answer')
 
 
