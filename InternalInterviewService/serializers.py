@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume
+from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question
 
 class WinSerializer(serializers.ModelSerializer):
     class Meta:
@@ -31,6 +31,9 @@ class ResumeSerializer(serializers.ModelSerializer):
         model = Resume
         fields = ('pk', 'title', 'notes', 'file')
 
-
+class QuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = ('pk', 'question_type', 'question', 'answer')
 
 

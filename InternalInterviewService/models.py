@@ -75,8 +75,7 @@ class Question(models.Model):
   ]
   question_type = models.CharField(
       max_length=2,
-      choices=QUESTION_TYPE,
-      default=INTERVIEW_QUESTIONS)
+      choices=QUESTION_TYPE)
   question = models.CharField(max_length=50)
   created_date = models.DateField(auto_now_add=True)
   answer = models.TextField(null=True)

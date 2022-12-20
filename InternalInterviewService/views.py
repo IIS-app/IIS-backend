@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated 
-from .serializers import WinSerializer, TargetCompanySerializer, CompanyContactsSerializer, StarrQuestionsSerializer, CoverLetterSerializer, ResumeSerializer
-from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume
+from .serializers import WinSerializer, TargetCompanySerializer, CompanyContactsSerializer, StarrQuestionsSerializer, CoverLetterSerializer, ResumeSerializer, QuestionSerializer
+from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question
 from .permissions import IsOwner
 
 # Create views here
@@ -67,6 +67,29 @@ class ResumeView(generics.ListCreateAPIView):
     def get_queryset(self):
         return Resume.objects.filter(user=self.request.user)
 
+
+class InterviewQuestionView(generics.ListCreateAPIView):
+    queryset = Question.objects.all()
+    
+
+    serializer_class = QuestionSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        return Question.objects.filter(user=self.request.user.id)
+
+class CompanyQuestionView(generics.ListCreateAPIView):
+    queryset = Question.objects.filter(question_type = 'CQ')
+    serializer_class = QuestionSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        return Question.objects.filter(user=self.request.user.id)
+
 class WinDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Win.objects.all()
     serializer_class = WinSerializer
@@ -97,3 +120,12 @@ class ResumeDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ResumeSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 
+class InterviewQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Question.objects.filter(question_type = 'IQ')
+    serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+class CompanyQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Question.objects.filter(question_type = 'CQ')
+    serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
