@@ -189,12 +189,12 @@ class Goal(models.Model):
 
 class ShortPersonalPitch(models.Model):
     title = models.CharField(max_length=50)
-    user =  models.ForeignKey(User, on_delete=models.CASCADE, related_name='short-personal-pitch')
+    user =  models.ForeignKey(User, on_delete=models.CASCADE, related_name='short_personal_pitch')
     pitch = models.TextField(max_length=650)
 
 class LongPersonalPitch(models.Model):
     title = models.CharField(max_length=50)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='long-personal-pitch')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='long_personal_pitch')
     pitch = models.TextField(max_length=1300)
 
 class Links(models.Model):
