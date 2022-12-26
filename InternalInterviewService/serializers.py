@@ -51,13 +51,15 @@ class LinkSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ('pk', 'question_type', 'question', 'answer')
+        fields = ('pk','question', 'answer')
+        read_only_fields = ('question_type', )
 
 
 class CompanyCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompanyComments
         fields = ( 'pk', 'created_at', 'updated_at', 'company', 'notes', 'important_date', 'contact')
+    
 
 class JobCommentSerializer(serializers.ModelSerializer):
     class meta:

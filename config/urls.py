@@ -28,6 +28,7 @@ urlpatterns = [
     path('target-company/<int:pk>', views.TargetCompanyDetail.as_view(), name='target-co-detail'),
     path('target-company/contacts/', views.CompanyContactsView.as_view(), name='contact-list'),
     path('target-company/contacts/<int:pk>', views.CompanyContactsDetail.as_view(), name='contact-detail'),
+    path('target-company/comments/', views.CompanyCommentsView.as_view(), name='company-comment'),
     path('starr-stories/', views.StarrQuestionsView.as_view(), name='starr-stories'),
     path('starr-stories/<int:pk>', views.StarrQuestionsDetial.as_view(), name='starr-stories-detail'),
     path('cover-letter/', views.CoverLetterView.as_view(), name='cover-letter'),
@@ -44,5 +45,6 @@ urlpatterns = [
     path('company-question/', views.CompanyQuestionView.as_view(), name='company-question'),
     path('interview-question/<int:pk>', views.InterviewQuestionDetail.as_view(), name='interview-question-detail'),
     path('company-question/<int:pk>', views.CompanyQuestionDetail.as_view(), name='company-question-detail'),
+    
     
 ]
