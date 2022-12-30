@@ -138,6 +138,17 @@ class JobCommentsView(generics.ListCreateAPIView):
     def get_queryset(self):
         return JobComments.objects.filter(user=self.request.user)
 
+class CompanyCommentsDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CompanyComments.objects.all()
+    serializer_class = CompanyCommentSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+
+class JobCommentsDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = JobComments.objects.all()
+    serializer_class = JobCommentSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
 
 class ShortPersonalPitchDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ShortPersonalPitch.objects.all()
