@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated 
-from .serializers import WinSerializer, TargetCompanySerializer, CompanyContactsSerializer, StarrQuestionsSerializer, CoverLetterSerializer, ResumeSerializer, QuestionSerializer
-from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question
+from .serializers import WinSerializer, TargetCompanySerializer, CompanyContactsSerializer, StarrQuestionsSerializer, CoverLetterSerializer, ResumeSerializer, QuestionSerializer, ShortPersonalPitchSerializer, LongPersonalPitchSerializer, LinkSerializer
+from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links
 from .permissions import IsOwner
 
 # Create views here
@@ -87,6 +87,53 @@ class CompanyQuestionView(generics.ListCreateAPIView):
     def get_queryset(self):
         return Question.objects.filter(user=self.request.user.id)
 
+class ShortPersonalPitchView(generics.ListCreateAPIView):
+    queryset = ShortPersonalPitch.objects.all()
+    serializer_class = ShortPersonalPitchSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    
+    def get_queryset(self):
+        return Resume.objects.filter(user=self.request.user)
+
+
+class LongPersonalPitchView(generics.ListCreateAPIView):
+    queryset = LongPersonalPitch.objects.all()
+    serializer_class = LongPersonalPitchSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    
+    def get_queryset(self):
+        return Resume.objects.filter(user=self.request.user)
+
+class LinksView(generics.ListCreateAPIView):
+    queryset = Links.objects.all()
+    serializer_class = LinkSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    
+    def get_queryset(self):
+        return Resume.objects.filter(user=self.request.user)
+
+
+class ShortPersonalPitchDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ShortPersonalPitch.objects.all()
+    serializer_class = ShortPersonalPitchSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+class LongPersonalPitchDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = LongPersonalPitch.objects.all()
+    serializer_class = LongPersonalPitchSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+class LinkDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Links.objects.all()
+    serializer_class = LinkSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+    
 class WinDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Win.objects.all()
     serializer_class = WinSerializer
