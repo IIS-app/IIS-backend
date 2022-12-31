@@ -24,6 +24,8 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('wins/', views.WinView.as_view(), name='win-list'),
     path('wins/<int:pk>', views.WinDetail.as_view(), name='win-detail'),
+    path('target-jobs/', views.TargetJobView.as_view(), name='job-list'),
+    path('target-jobs/<int:pk>', views.TargetJobDetail.as_view(), name = 'job-detail'),
     path('target-company/', views.TargetCompanyView.as_view(), name='target-co-list'),
     path('target-company/<int:pk>', views.TargetCompanyDetail.as_view(), name='target-co-detail'),
     path('target-company/contacts/', views.CompanyContactsView.as_view(), name='contact-list'),

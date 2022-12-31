@@ -134,8 +134,9 @@ class CompanyContacts(models.Model):
 # Create Job model here
 class Job(models.Model):
   title = models.CharField(max_length=50)
-  notes = models.TextField()
+  notes = models.TextField(null=True, blank=True)
   job_listing = models.URLField()
+  Dossier = models.TextField(null=True, blank=True)
   company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE, related_name='jobs')
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs')
 
@@ -154,6 +155,7 @@ class CoverLetter(models.Model):
     file = models.FileField(upload_to='coverletter')
     job = models.ForeignKey(Job, null=True, on_delete=models.CASCADE, related_name='cover_letters')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letters')
+
     
 #Create Dossier model here
 class Dossier(models.Model):
