@@ -134,8 +134,9 @@ class CompanyContacts(models.Model):
 # Create Job model here
 class Job(models.Model):
   title = models.CharField(max_length=50)
-  notes = models.TextField()
+  notes = models.TextField(null=True, blank=True)
   job_listing = models.URLField()
+  Dossier = models.TextField(null=True, blank=True)
   company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE, related_name='jobs')
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs')
 
@@ -154,6 +155,7 @@ class CoverLetter(models.Model):
     file = models.FileField(upload_to='coverletter')
     job = models.ForeignKey(Job, null=True, on_delete=models.CASCADE, related_name='cover_letters')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letters')
+
     
 #Create Dossier model here
 class Dossier(models.Model):
@@ -201,3 +203,20 @@ class Links(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='links')
     title = models.CharField(max_length=20)
     link = models.URLField()
+
+class CompanyComments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='company_comments')
+    company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE, related_name='company_comments')
+    contact = models.ForeignKey(CompanyContacts, on_delete=models.CASCADE, related_name='comment_contact', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    important_date = models.DateTimeField(blank=True, null=True)
+    notes = models.TextField()
+
+class JobComments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="job_comments")
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='job_comments')
+    created_at = models.DateTimeField(auto_now_add=True),
+    updated_at = models.DateTimeField(auto_now= True)
+    important_date = models.DateTimeField(blank=True,null=True)
+    notes = models.TextField()

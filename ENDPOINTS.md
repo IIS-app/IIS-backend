@@ -773,7 +773,7 @@ response: If response is the same as the information you provided creation was s
 ### Request
 Requirement: user must be logged in
 ```json
-GET /user/link
+GET /user/link/
 ```
 ### Response
 ```json
@@ -844,3 +844,110 @@ DELETE /user/link/pk
 ```json
 204 No Content
 ```
+
+## Create a Job
+### Request
+requirements: user must be logged in
+required fields: title, job_listing, company
+```json
+POST /target-job/
+{
+	"title": "Google Software Engineer",
+	"job_listing": "http://google.com",
+	"company": 1
+}
+```
+### Response
+response: If response is the same as the information you provided creation was successful
+```json
+200 OK
+{
+	"pk": 1,
+	"title": "Google Software Engineer",
+	"notes": null,
+	"job_listing": "http://google.com",
+	"company": 1
+}
+```
+## job info
+### Request
+Requirement: user must be logged in
+```json
+GET /target-job/
+```
+### Response
+```json
+200 OK
+{
+	"pk": 1,
+	"title": "Google Software Engineer",
+	"notes": null,
+	"job_listing": "http://google.com",
+	"company": 1
+}
+```
+NOTE: This will be a list of all the users jobs
+## Job Detail
+### Request
+Requirement: user must be logged in, must be owner
+```json
+GET /target-job/pk    
+```
+### Response
+```json
+{
+	"pk": 1,
+	"title": "Google Software Engineer",
+	"notes": null,
+	"job_listing": "http://google.com",
+	"company": 1
+}
+```
+## Edit a Job
+### Request
+Requirement: user must be logged in, must be owner
+```json
+PTCH /target-job/pk
+{
+	"link": "https://google.com/joblistings"
+}
+```
+NOTE: "Only add the fields you want to change."
+## Response
+```json
+200 OK
+{
+	"pk": 1,
+	"title": "Google Software Engineer",
+	"notes": null,
+	"job_listing": "http://google.com/joblistings",
+	"company": 1
+}
+```
+NOTE: Response should reflect changes
+## Edit a job(Second way)
+### Request
+Requirement: user must be logged in, must be owner
+Required fields: title, link
+```json
+PUT /target-job/pk
+{
+	"pk": 1,
+	"title": "Google Software Engineer",
+	"job_listing": "http://google.com",
+	"company": 1
+}
+```
+NOTE: This is essentially rebuilding the card you will still have to input other fields if you want to change them.
+## Delete a link
+### Request
+Requirement: user must be logged in, must be owner
+```json
+DELETE /target-job/pk
+```
+## Response
+```json
+204 No Content
+```
+
+

@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated 
-from .serializers import WinSerializer, TargetCompanySerializer, CompanyContactsSerializer, StarrQuestionsSerializer, CoverLetterSerializer, ResumeSerializer, QuestionSerializer, ShortPersonalPitchSerializer, LongPersonalPitchSerializer, LinkSerializer
-from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links
+from .serializers import WinSerializer, TargetCompanySerializer, CompanyContactsSerializer, StarrQuestionsSerializer, CoverLetterSerializer, ResumeSerializer, QuestionSerializer, ShortPersonalPitchSerializer, LongPersonalPitchSerializer, LinkSerializer, CompanyCommentSerializer, JobCommentSerializer, JobSerializer
+from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links, CompanyComments, JobComments, Job
 from .permissions import IsOwner
 
 # Create views here
@@ -72,20 +72,20 @@ class InterviewQuestionView(generics.ListCreateAPIView):
     serializer_class = QuestionSerializer
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(user=self.request.user, question_type = 'IQ')
 
     def get_queryset(self):
-        return Question.objects.filter(user=self.request.user.id)
+        return Question.objects.filter(user=self.request.user.id, question_type='IQ')
 
 class CompanyQuestionView(generics.ListCreateAPIView):
     queryset = Question.objects.filter(question_type = 'CQ')
     serializer_class = QuestionSerializer
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(user=self.request.user, question_type='CQ')
 
     def get_queryset(self):
-        return Question.objects.filter(user=self.request.user.id)
+        return Question.objects.filter(user=self.request.user.id, question_type = 'CQ')
 
 class ShortPersonalPitchView(generics.ListCreateAPIView):
     queryset = ShortPersonalPitch.objects.all()
@@ -118,6 +118,52 @@ class LinksView(generics.ListCreateAPIView):
     def get_queryset(self):
         return Resume.objects.filter(user=self.request.user)
 
+class CompanyCommentsView(generics.ListCreateAPIView):
+    queryset = CompanyComments.objects.all()
+    serializer_class = CompanyCommentSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        return CompanyComments.objects.filter(user=self.request.user)
+
+class JobCommentsView(generics.ListCreateAPIView):
+    queryset = JobComments.objects.all()
+    serializer_class = JobCommentSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    
+    def get_queryset(self):
+        return JobComments.objects.filter(user=self.request.user)
+
+class TargetJobView(generics.ListCreateAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        return Job.objects.filter(user=self.request.user)
+
+class TargetJobDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+class CompanyCommentsDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CompanyComments.objects.all()
+    serializer_class = CompanyCommentSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+
+class JobCommentsDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = JobComments.objects.all()
+    serializer_class = JobCommentSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
 
 class ShortPersonalPitchDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ShortPersonalPitch.objects.all()
@@ -133,7 +179,7 @@ class LinkDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Links.objects.all()
     serializer_class = LinkSerializer
     permission_classes = [IsAuthenticated, IsOwner]
-    
+
 class WinDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Win.objects.all()
     serializer_class = WinSerializer
@@ -173,3 +219,4 @@ class CompanyQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Question.objects.filter(question_type = 'CQ')
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+
