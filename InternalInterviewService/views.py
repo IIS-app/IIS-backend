@@ -173,3 +173,4 @@ class CompanyQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Question.objects.filter(question_type = 'CQ')
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+
