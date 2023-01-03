@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 from django.utils import timezone
 from django.db.models.fields import DateTimeField, DateField
+from taggit.managers import TaggableManager
 
 # Create your models here.
 
@@ -69,17 +70,27 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Question(models.Model):
   INTERVIEW_QUESTIONS = 'IQ'
   COMPANY_QUESTIONS = 'CQ'
+  SYSTEM_QUESTIONS = 'SQ'
   QUESTION_TYPE = [
       (INTERVIEW_QUESTIONS, 'Interview Questions'),
       (COMPANY_QUESTIONS, 'Company Questions'),
+      (SYSTEM_QUESTIONS, 'System Questions'),
   ]
   question_type = models.CharField(
       max_length=2,
       choices=QUESTION_TYPE)
   question = models.CharField(max_length=50)
-  created_date = models.DateField(auto_now_add=True)
   answer = models.TextField(null=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='questions')
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now= True)
+  draft = models.BooleanField(default=False)
+  
+  tags = TaggableManager()
+
+  def __str__(self):
+    return self.question
+
   
 # Create StarrQuestions model here
 class StarrQuestions(models.Model):
@@ -91,15 +102,27 @@ class StarrQuestions(models.Model):
     action = models.TextField(max_length=500, null=True, blank=True)
     reflection = models.TextField(max_length=500, null=True, blank=True)
     result = models.TextField(max_length=500, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now= True)
+    draft = models.BooleanField(default=False)
+
+    tags = TaggableManager()
+
+    def __str__(self):
+        return self.question
 
 # Create Win model here
 class Win(models.Model):
   title = models.CharField(max_length=50)
-  created_date = models.DateTimeField(auto_now_add=True)
   occured_date = models.DateField(null=True, blank=True, auto_now_add=False)
   win = models.TextField()
   win_picture = models.ImageField(null=True, blank=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wins')
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now= True)
+  draft = models.BooleanField(default=False)
+
+  tags = TaggableManager()
    
   def __str__(self):
         return self.title
@@ -121,7 +144,12 @@ class TargetCompany(models.Model):
     job_page = models.URLField(null =True, blank=True)
     comments = models.TextField(max_length=5000, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now= True)
+
+    tags = TaggableManager()
+
+    def __str__(self):
+        return self.company_name
 
 # Create CompanyContacts model here
 class CompanyContacts(models.Model):
@@ -130,6 +158,11 @@ class CompanyContacts(models.Model):
     notes = models.TextField(max_length=5000, null=True, blank=True)
     company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now= True)
+
+    def __str__(self):
+        return self.name
 
 # Create Job model here
 class Job(models.Model):
@@ -139,6 +172,13 @@ class Job(models.Model):
   Dossier = models.TextField(null=True, blank=True)
   company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE, related_name='jobs')
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs')
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now= True)
+
+  tags = TaggableManager()
+
+  def __str__(self):
+    return self.title
 
 # Create Resume model here
 class Resume(models.Model):
@@ -147,6 +187,13 @@ class Resume(models.Model):
     file = models.FileField(upload_to='resume')
     job = models.ForeignKey(Job, null=True, on_delete=models.CASCADE, related_name='resumes')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='resumes')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now= True)
+
+    tags = TaggableManager()
+
+    def __str__(self):
+        return self.title
 
 # Create CoverLetter model here
 class CoverLetter(models.Model):
@@ -155,6 +202,14 @@ class CoverLetter(models.Model):
     file = models.FileField(upload_to='coverletter')
     job = models.ForeignKey(Job, null=True, on_delete=models.CASCADE, related_name='cover_letters')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letters')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now= True)
+    draft = models.BooleanField(default=False)
+
+    tags = TaggableManager()
+
+    def __str__(self):
+        return self.title
 
     
 #Create Dossier model here
@@ -167,6 +222,14 @@ class Dossier(models.Model):
   questions = models.ManyToManyField(Question)
   wins = models.ManyToManyField(Win)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='dossiers')
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now= True)
+  draft = models.BooleanField(default=False)
+
+  tags = TaggableManager()
+
+  def __str__(self):
+    return self.title
 
 # Create Interview model here
 class Interview(models.Model):
@@ -179,44 +242,80 @@ class Interview(models.Model):
   thank_you_letter_file = models.FileField(upload_to='thank_you_letter')
   questions_asked = models.TextField()
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='interviews')
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now= True)
+
+  tags = TaggableManager()
+
+  def __str__(self):
+    return self.title
 
 # Create Goal model here
 class Goal(models.Model):
   title = models.CharField(max_length=50)
   number = models.PositiveIntegerField()
   metric = models.CharField(max_length=50)
-  created_date = models.DateField(auto_now_add=True)
   date_to_complete = models.DateField(blank=True, null=True, auto_now_add=False)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='goals')
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now= True)
+  draft = models.BooleanField(default=False)
+
+  tags = TaggableManager()
+
+  def __str__(self):
+    return self.title
 
 class ShortPersonalPitch(models.Model):
     title = models.CharField(max_length=50)
     user =  models.ForeignKey(User, on_delete=models.CASCADE, related_name='short_personal_pitch')
     pitch = models.TextField(max_length=650)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now= True)
+    draft = models.BooleanField(default=False)
+
+    tags = TaggableManager()
+
+    def __str__(self):
+        return self.title
 
 class LongPersonalPitch(models.Model):
     title = models.CharField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='long_personal_pitch')
     pitch = models.TextField(max_length=1300)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now= True)
+    draft = models.BooleanField(default=False)
+
+    tags = TaggableManager()
+
+    def __str__(self):
+        return self.title
 
 class Links(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='links')
     title = models.CharField(max_length=20)
     link = models.URLField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now= True)
+
+    def __str__(self):
+        return self.title
 
 class CompanyComments(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='company_comments')
     company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE, related_name='company_comments')
     contact = models.ForeignKey(CompanyContacts, on_delete=models.CASCADE, related_name='comment_contact', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now= True)
     important_date = models.DateTimeField(blank=True, null=True)
     notes = models.TextField()
+
 
 class JobComments(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="job_comments")
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='job_comments')
-    created_at = models.DateTimeField(auto_now_add=True),
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now= True)
     important_date = models.DateTimeField(blank=True,null=True)
     notes = models.TextField()

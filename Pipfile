@@ -13,6 +13,7 @@ gunicorn = "*"
 django-cors-headers = "*"
 djoser = "*"
 pillow = "*"
+django-taggit = "*"
 
 [dev-packages]
 

@@ -47,6 +47,9 @@ urlpatterns = [
     path('company-question/', views.CompanyQuestionView.as_view(), name='company-question'),
     path('interview-question/<int:pk>', views.InterviewQuestionDetail.as_view(), name='interview-question-detail'),
     path('company-question/<int:pk>', views.CompanyQuestionDetail.as_view(), name='company-question-detail'),
+    path('user/me<int:pk>', views.UserDetail.as_view(), name='profile'),
+    path('dossier/', views.DossierView.as_view(), name='dossier-generic'),
+    path('dossier/<int:pk>', views.DossierDetail.as_view(), name='dossier-detail'),
     
     
 ]

@@ -548,7 +548,7 @@ PUT /target-company/contact/pk
 }
 ```
 NOTE: This is essentially rebuilding the card you will still have to input other fields if you want to change them.
-## Delete a Target Company
+## Delete a Company Contact
 ### Request
 Requirement: user must be logged in, must be owner
 ```json

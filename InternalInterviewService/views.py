@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated 
-from .serializers import WinSerializer, TargetCompanySerializer, CompanyContactsSerializer, StarrQuestionsSerializer, CoverLetterSerializer, ResumeSerializer, QuestionSerializer, ShortPersonalPitchSerializer, LongPersonalPitchSerializer, LinkSerializer, CompanyCommentSerializer, JobCommentSerializer, JobSerializer
-from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links, CompanyComments, JobComments, Job
-from .permissions import IsOwner
+from .serializers import WinSerializer, TargetCompanySerializer, CompanyContactsSerializer, StarrQuestionsSerializer, CoverLetterSerializer, ResumeSerializer, QuestionSerializer, ShortPersonalPitchSerializer, LongPersonalPitchSerializer, LinkSerializer, CompanyCommentSerializer, JobCommentSerializer, JobSerializer, SystemQuestionSerializer, UserSerializer, DossierSerializer
+from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links, CompanyComments, JobComments, Job, Dossier, User
+from .permissions import IsOwner, IsAdminOrReadOnly
 
 # Create views here
 
@@ -87,6 +87,17 @@ class CompanyQuestionView(generics.ListCreateAPIView):
     def get_queryset(self):
         return Question.objects.filter(user=self.request.user.id, question_type = 'CQ')
 
+class SystemQuestionView(generics.ListCreateAPIView):
+    queryset = Question.objects.filter(question_type = 'SQ')
+    serializer_class = SystemQuestionSerializer
+    permission_classes = (IsAdminOrReadOnly)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user, question_type='SQ')
+
+    def get_queryset(self):
+        return Question.objects.filter(user=self.request.user.id, question_type = 'SQ')
+
 class ShortPersonalPitchView(generics.ListCreateAPIView):
     queryset = ShortPersonalPitch.objects.all()
     serializer_class = ShortPersonalPitchSerializer
@@ -148,6 +159,23 @@ class TargetJobView(generics.ListCreateAPIView):
     def get_queryset(self):
         return Job.objects.filter(user=self.request.user)
 
+class DossierView(generics.ListCreateAPIView):
+    queryset = Dossier.objects.all()
+    serializer_class = DossierSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        return Dossier.objects.filter(user=self.request.user)
+
+class DossierDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Dossier.objects.all()
+    serializer_class = DossierSerializer
+    permission_classes = (IsOwner, IsAuthenticated)
+
+
+
 class TargetJobDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
@@ -158,12 +186,10 @@ class CompanyCommentsDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CompanyCommentSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 
-
 class JobCommentsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = JobComments.objects.all()
     serializer_class = JobCommentSerializer
     permission_classes = [IsAuthenticated, IsOwner]
-
 
 class ShortPersonalPitchDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ShortPersonalPitch.objects.all()
@@ -219,4 +245,18 @@ class CompanyQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Question.objects.filter(question_type = 'CQ')
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+
+class SystemQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Question.objects.filter(question_type = 'SQ')
+    serializer_class = SystemQuestionSerializer
+    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
+
+
+class UserDetail(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return User.objects.filter(id = self.request.user.id())
 
