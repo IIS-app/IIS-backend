@@ -52,6 +52,4 @@ urlpatterns = [
     path('user/me<int:pk>', views.UserDetail.as_view(), name='profile'),
     path('dossier/', views.DossierView.as_view(), name='dossier-generic'),
     path('dossier/<int:pk>', views.DossierDetail.as_view(), name='dossier-detail'),
-    
-    
 ]
