@@ -99,5 +99,37 @@ class DossierSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     class Meta:
         model = Dossier
-        fields = ('title', 'job', 'resume', 'cover_letter', 'starrs', 'questions', 'wins', 'created_at', 'updated_at', 'draft', 'tags')
+        fields = ('title', 'job', 'resume', 'cover_letter', 'starrs', 'questions', 'wins', 'created_at', 'updated_at', 'draft', 'tags', 'id')
+
+class DossierDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField()
+    job_title = serializers.CharField(source='job.title')
+    resume_title = serializers.CharField(source='resume.title')
+    cover_letter_title = serializers.CharField(source='cover_letter.title')
+    starr_titles = serializers.SerializerMethodField()
+    win_titles = serializers.SerializerMethodField()
+
+    def get_starr_titles(self, obj):
+        starr_titles = []
+        for starr in obj.starrs.all():
+            starr_titles.append({'id': starr.id, 'title': starr.question})
+        return starr_titles
+
+    def get_win_titles(self, obj):
+        win_titles = []
+        for win in obj.wins.all():
+            win_titles.append({'id': win.id, 'title': win.title})
+        return win_titles
+
+    def get_question_titles_types(self, obj):
+        question_titles = []
+        for question in obj.questions.all():
+            question_titles.append({'id': question.id, 'title': question.question, 'type': question.QUESTION_TYPE})
+        return question_titles
+
+    class Meta:
+        model = Dossier
+        fields = ['id', 'title', 'job', 'job_title','starrs','starr_titles', 'resume', 'resume_title', 'cover_letter','cover_letter_title', 'questions', 'wins', 'win_titles', 'user', 'created_at', 'updated_at', 'draft', 'tags']
+        read_only_fields = ['job_title','starr_titles','win_titles']
+
 
