@@ -104,7 +104,7 @@ class StarrQuestions(models.Model):
     updated_at = models.DateTimeField(auto_now= True)
     draft = models.BooleanField(default=True)
 
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     def __str__(self):
         return self.question
@@ -180,9 +180,9 @@ class Job(models.Model):
 
 # Create Resume model here
 class Resume(models.Model):
-    title = models.CharField(max_length=75, null=True, blank=True)
+    title = models.CharField(max_length=75)
     notes = models.TextField(max_length=5000, null=True, blank=True)
-    file = models.FileField(upload_to='resume')
+    file = models.FileField(upload_to='resume', null=True, blank=True)
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='resumes', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='resumes')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -197,7 +197,7 @@ class Resume(models.Model):
 class CoverLetter(models.Model):
     title = models.CharField(max_length=75)
     notes = models.TextField(max_length=5000, null=True, blank=True)
-    file = models.FileField(upload_to='coverletter')
+    file = models.FileField(upload_to='coverletter',null=True, blank=True)
     job = models.ForeignKey(Job, null=True, on_delete=models.CASCADE, related_name='cover_letters')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letters')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -216,15 +216,14 @@ class Dossier(models.Model):
   job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='dossiers')
   resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='dossiers',blank=True, null=True)
   cover_letter = models.ForeignKey(CoverLetter, on_delete=models.CASCADE, related_name='dossiers', blank=True, null=True)
-  starrs = models.ManyToManyField(StarrQuestions, blank=True, null=True)
-  questions = models.ManyToManyField(Question, blank=True, null=True)
-  wins = models.ManyToManyField(Win, blank=True, null=True)
-  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='dossiers', blank=True, null=True)
+  starrs = models.ManyToManyField(StarrQuestions, null=True, blank=True)
+  questions = models.ManyToManyField(Question, null=True, blank=True)
+  wins = models.ManyToManyField(Win, null=True, blank=True)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='dossiers', null=True, blank=True)
   created_at = models.DateTimeField(auto_now_add=True, null=True)
   updated_at = models.DateTimeField(auto_now= True, null=True)
   draft = models.BooleanField(default=True)
-
-  tags = TaggableManager()
+  tags = TaggableManager(blank=True)
 
   def __str__(self):
     return self.title
