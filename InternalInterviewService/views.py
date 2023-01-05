@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics, parsers
 from rest_framework.permissions import IsAuthenticated 
 from .serializers import WinSerializer, TargetCompanySerializer, CompanyContactsSerializer, StarrQuestionsSerializer, CoverLetterSerializer, ResumeSerializer, QuestionSerializer, ShortPersonalPitchSerializer, LongPersonalPitchSerializer, LinkSerializer, CompanyCommentSerializer, JobCommentSerializer, JobSerializer, SystemQuestionSerializer, UserSerializer, DossierSerializer, DossierDetailSerializer
-from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links, CompanyComments, JobComments, Job, Dossier, User
+from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links, CompanyComments, JobComments, Job, Dossier, User, SystemQuestion
 from .permissions import IsOwner, IsAdminOrReadOnly
 from django.views.generic.edit import CreateView
 # from django.urls import reverse_lazy
@@ -96,16 +96,28 @@ class CompanyQuestionView(generics.ListCreateAPIView):
     def get_queryset(self):
         return Question.objects.filter(user=self.request.user.id, question_type = 'CQ')
 
-class SystemQuestionView(generics.ListCreateAPIView):
-    queryset = Question.objects.filter(question_type = 'SQ')
+class SystemQuestionIQView(generics.ListCreateAPIView):
+    queryset = SystemQuestion.objects.filter(question_type = 'IQ')
     serializer_class = SystemQuestionSerializer
     permission_classes = (IsAdminOrReadOnly)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user, question_type='SQ')
+        serializer.save(user=self.request.user, question_type='IQ')
 
     def get_queryset(self):
-        return Question.objects.filter(user=self.request.user.id, question_type = 'SQ')
+        return SystemQuestion.objects.filter(user=self.request.user.id, question_type = 'IQ')
+
+class SystemQuestionCQView(generics.ListCreateAPIView):
+    queryset = SystemQuestion.objects.filter(question_type = 'CQ')
+    serializer_class = SystemQuestionSerializer
+    permission_classes = (IsAdminOrReadOnly)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user, question_type='CQ')
+
+    def get_queryset(self):
+        return SystemQuestion.objects.filter(user=self.request.user.id, question_type = 'CQ')
+
 
 class ShortPersonalPitchView(generics.ListCreateAPIView):
     queryset = ShortPersonalPitch.objects.all()
@@ -189,7 +201,7 @@ class TargetJobDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
     permission_classes = [IsAuthenticated, IsOwner]
-
+    
 class CompanyCommentsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = CompanyComments.objects.all()
     serializer_class = CompanyCommentSerializer
@@ -255,8 +267,13 @@ class CompanyQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 
-class SystemQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Question.objects.filter(question_type = 'SQ')
+class SystemQuestionIQDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SystemQuestion.objects.filter(question_type = 'IQ')
+    serializer_class = SystemQuestionSerializer
+    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
+
+class SystemQuestionCQDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SystemQuestion.objects.filter(question_type = 'CQ')
     serializer_class = SystemQuestionSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
 

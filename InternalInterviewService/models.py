@@ -71,11 +71,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Question(models.Model):
   INTERVIEW_QUESTIONS = 'IQ'
   COMPANY_QUESTIONS = 'CQ'
-  SYSTEM_QUESTIONS = 'SQ'
   QUESTION_TYPE = [
       (INTERVIEW_QUESTIONS, 'Interview Questions'),
-      (COMPANY_QUESTIONS, 'Company Questions'),
-      (SYSTEM_QUESTIONS, 'System Questions'),
+      (COMPANY_QUESTIONS, 'Company Questions')
   ]
   question_type = models.CharField(max_length=2,choices=QUESTION_TYPE)
   question = models.CharField(max_length=75)
@@ -84,6 +82,22 @@ class Question(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now= True)
   draft = models.BooleanField(default=True)
+  
+  tags = TaggableManager(blank=True)
+
+  def __str__(self):
+    return self.question
+
+class SystemQuestion(models.Model):
+  INTERVIEW_QUESTIONS = 'IQ'
+  COMPANY_QUESTIONS = 'CQ'
+  QUESTION_TYPE = [
+      (INTERVIEW_QUESTIONS, 'Interview Questions'),
+      (COMPANY_QUESTIONS, 'Company Questions')
+  ]
+  question_type = models.CharField(max_length=2,choices=QUESTION_TYPE)
+  question = models.CharField(max_length=75)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='system_questions')
   
   tags = TaggableManager(blank=True)
 
