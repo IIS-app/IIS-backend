@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links, CompanyComments, JobComments, Job, User, Dossier
+from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links, CompanyComments, JobComments, Job, User, Dossier, SystemQuestion
 from taggit.serializers import (TagListSerializerField,
                                 TaggitSerializer)
 
@@ -86,8 +86,8 @@ class JobSerializer(TaggitSerializer, serializers.ModelSerializer):
 class SystemQuestionSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     class Meta:
-        model = Question
-        fields = ('pk', 'question', 'created_at', 'updated_at', 'tags')
+        model = SystemQuestion
+        fields = ('pk', 'question', 'tags', 'question_type')
         read_only_fields = ('question_type', )
         
 class UserSerializer(serializers.ModelSerializer):
@@ -104,6 +104,7 @@ class DossierSerializer(TaggitSerializer, serializers.ModelSerializer):
 class DossierDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     job_title = serializers.CharField(source='job.title')
+    company = serializers.CharField(source='job.company')
     resume_title = serializers.CharField(source='resume.title')
     cover_letter_title = serializers.CharField(source='cover_letter.title')
     starr_titles = serializers.SerializerMethodField()
