@@ -1,9 +1,12 @@
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, parsers
 from rest_framework.permissions import IsAuthenticated 
 from .serializers import WinSerializer, TargetCompanySerializer, CompanyContactsSerializer, StarrQuestionsSerializer, CoverLetterSerializer, ResumeSerializer, QuestionSerializer, ShortPersonalPitchSerializer, LongPersonalPitchSerializer, LinkSerializer, CompanyCommentSerializer, JobCommentSerializer, JobSerializer, SystemQuestionSerializer, UserSerializer, DossierSerializer
 from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links, CompanyComments, JobComments, Job, Dossier, User
 from .permissions import IsOwner, IsAdminOrReadOnly
+from django.views.generic.edit import CreateView
+# from django.urls import reverse_lazy
+from django.core.files.storage import FileSystemStorage
 
 # Create views here
 
@@ -16,6 +19,12 @@ class WinView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Win.objects.filter(user=self.request.user)
+
+class WinPictureView(generics.UpdateAPIView):
+    queryset = Win.objects.all()
+    serializer_class = WinSerializer
+    parser_classes = [parsers.FileUploadParser]
+    permission_classes = [IsAuthenticated]
 
 class TargetCompanyView(generics.ListCreateAPIView):
     queryset = TargetCompany.objects.all()

@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.db.models.fields import DateTimeField, DateField
 from taggit.managers import TaggableManager
 
+
 # Create your models here.
 
 # Create custom user manager here
@@ -116,7 +117,7 @@ class Win(models.Model):
   title = models.CharField(max_length=50)
   occured_date = models.DateField(null=True, blank=True, auto_now_add=False)
   win = models.TextField()
-  win_picture = models.ImageField(null=True, blank=True)
+  win_picture = models.ImageField(upload_to='win_picture', null=True, blank=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wins')
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now= True)

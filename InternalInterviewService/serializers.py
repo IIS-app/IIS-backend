@@ -6,6 +6,14 @@ class WinSerializer(serializers.ModelSerializer):
         model = Win
         fields = ('pk', 'title', 'win', 'win_picture', 'created_at', 'updated_at', 'draft',)
 
+    def update(self, instance, validated_data):
+        if "file" in self.initial_data:
+            file = self.initial_data.get("file")
+            instance.win_picture.save(file.name, file, save=True)
+            return instance
+        # this call to super is to make sure that update still works for other fields
+        return super().update(instance, validated_data)
+
 class TargetCompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = TargetCompany
