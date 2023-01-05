@@ -951,3 +951,55 @@ DELETE /target-job/pk
 ```
 
 
+
+
+## Create a Compant Comment
+### Request
+requirements: user must be logged in
+required fields: company(pk), notes
+```json
+POST /target-company/comments/
+{
+	"company": 1,
+	"notes": "They didnt hire me :(",
+
+}
+```
+### Response
+response: If response is the same as the information you provided creation was successful
+```json
+200 OK
+{
+	"pk": 1,
+	"created_at": "2022-12-26T22:52:13.309049Z",
+	"updated_at": "2022-12-26T22:52:13.309084Z",
+	"company": 1,
+	"notes": "They didnt hire me :(",
+	"important_date": null,
+	"contact": null
+}
+```
+## Company Comments info
+### Request
+Requirement: user must be logged in
+```json
+GET /target-company/comments/
+```
+### Response
+```json
+200 OK
+{
+		"pk": 1,
+		"created_at": "2022-12-26T22:52:13.309049Z",
+		"updated_at": "2022-12-26T22:52:13.309084Z",
+		"company": 1,
+		"notes": "They didnt hire me :(",
+		"important_date": null,
+		"contact": null
+}
+```
+NOTE: This will be a list of all the users jobs
+
+
+
+
