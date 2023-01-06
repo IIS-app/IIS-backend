@@ -17,6 +17,7 @@ class TargetCompanySerializer(TaggitSerializer, serializers.ModelSerializer):
         fields = ('pk', 'company_name', 'rank', 'website', 'job_page', 'comments','created_at', 'updated_at', 'tags')
 
 class CompanyContactsSerializer(serializers.ModelSerializer):
+    company_title = serializers.CharField(source = 'company.company_title')
     class Meta:
         model = CompanyContacts
         fields = ('pk', 'company', 'name', 'email', 'notes', 'created_at', 'updated_at')
@@ -67,21 +68,24 @@ class QuestionSerializer(TaggitSerializer, serializers.ModelSerializer):
         read_only_fields = ('question_type', )
 
 class CompanyCommentSerializer(serializers.ModelSerializer):
+    company_title = serializers.CharField(source='company.company_name')
     class Meta:
         model = CompanyComments
         fields = ( 'pk', 'company', 'notes', 'important_date', 'contact', 'created_at', 'updated_at')
     
 
 class JobCommentSerializer(serializers.ModelSerializer):
+    job_title = serializers.CharField(source='job.title')
     class meta:
         model = JobComments
-        fields = ('pk', 'job', 'notes', 'important_date', 'created_at', 'updated_at')
+        fields = ('pk', 'job', 'job_title', 'notes', 'important_date', 'created_at', 'updated_at')
 
 class JobSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
+    company_title = serializers.CharField(source='company.company_name')
     class Meta:
         model = Job
-        fields = ('pk', 'title', 'notes', 'job_listing', 'company', 'created_at', 'updated_at', 'tags')
+        fields = ('pk', 'title', 'notes', 'job_listing', 'company', 'company_title', 'created_at', 'updated_at', 'tags')
 
 class SystemQuestionSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
