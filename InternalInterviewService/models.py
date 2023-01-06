@@ -87,16 +87,16 @@ class Question(models.Model):
   def __str__(self):
     return self.question
 
+# Create Question model here
 class SystemQuestion(models.Model):
   INTERVIEW_QUESTIONS = 'IQ'
   COMPANY_QUESTIONS = 'CQ'
   QUESTION_TYPE = [
       (INTERVIEW_QUESTIONS, 'Interview Questions'),
-      (COMPANY_QUESTIONS, 'Company Questions')
+      (COMPANY_QUESTIONS, 'Company Questions'),
   ]
   question_type = models.CharField(max_length=2,choices=QUESTION_TYPE)
   question = models.CharField(max_length=75)
-  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='system_questions')
   
   tags = TaggableManager(blank=True)
 
