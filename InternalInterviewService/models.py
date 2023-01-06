@@ -72,7 +72,7 @@ class Question(models.Model):
   COMPANY_QUESTIONS = 'CQ'
   QUESTION_TYPE = [
       (INTERVIEW_QUESTIONS, 'Interview Questions'),
-      (COMPANY_QUESTIONS, 'Company Questions'),
+      (COMPANY_QUESTIONS, 'Company Questions')
   ]
   question_type = models.CharField(max_length=2,choices=QUESTION_TYPE)
   question = models.CharField(max_length=75)

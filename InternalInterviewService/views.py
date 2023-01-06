@@ -209,7 +209,7 @@ class TargetJobDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
     permission_classes = [IsAuthenticated, IsOwner]
-
+    
 class CompanyCommentsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = CompanyComments.objects.all()
     serializer_class = CompanyCommentSerializer
@@ -270,8 +270,13 @@ class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
 
-class SystemQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = SystemQuestion.objects.all()
+class SystemQuestionIQDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SystemQuestion.objects.filter(question_type = 'IQ')
+    serializer_class = SystemQuestionSerializer
+    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
+
+class SystemQuestionCQDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SystemQuestion.objects.filter(question_type = 'CQ')
     serializer_class = SystemQuestionSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
 

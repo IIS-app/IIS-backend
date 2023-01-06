@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('taggit', '0005_auto_20220424_2025'),
-        ('InternalInterviewService', '0018_links_created_at_links_updated_at_and_more'),
+        ('InternalInterviewService', '0016_alter_coverletter_tags_alter_dossier_tags_and_more'),
     ]
 
     operations = [
