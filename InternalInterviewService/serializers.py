@@ -40,7 +40,7 @@ class CoverLetterSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     class Meta:
         model = CoverLetter
-        fields = ('pk', 'title', 'notes','file', 'created_at', 'updated_at', 'draft', 'tags')
+        fields = ('pk', 'title', 'notes','cover_letter_file', 'created_at', 'updated_at', 'draft', 'tags')
 
     def update(self, instance, validated_data):
         if "file" in self.initial_data:
@@ -54,7 +54,7 @@ class ResumeSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     class Meta:
         model = Resume
-        fields = ('pk', 'title', 'notes', 'file', 'created_at', 'updated_at', 'tags')
+        fields = ('pk', 'title', 'notes', 'resume_file', 'created_at', 'updated_at', 'tags')
 
     def update(self, instance, validated_data):
         if "file" in self.initial_data:

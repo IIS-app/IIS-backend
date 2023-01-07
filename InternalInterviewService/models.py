@@ -197,7 +197,7 @@ class Job(models.Model):
 class Resume(models.Model):
     title = models.CharField(max_length=75)
     notes = models.TextField(max_length=5000, null=True, blank=True)
-    file = models.FileField(upload_to='resume_file', null=True, blank=True)
+    resume_file = models.FileField(upload_to='resume_file', null=True, blank=True)
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='resumes', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='resumes')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -212,8 +212,8 @@ class Resume(models.Model):
 class CoverLetter(models.Model):
     title = models.CharField(max_length=75)
     notes = models.TextField(max_length=5000, null=True, blank=True)
-    file = models.FileField(upload_to='cover_letter_file', null=True, blank=True)
-    job = models.ForeignKey(Job, null=True, on_delete=models.CASCADE, related_name='cover_letters')
+    cover_letter_file = models.FileField(upload_to='cover_letter_file', null=True, blank=True)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='cover_letters', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letters')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now= True)
