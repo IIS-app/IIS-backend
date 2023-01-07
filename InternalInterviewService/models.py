@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.db.models.fields import DateTimeField, DateField
 from taggit.managers import TaggableManager
 
+
 # Create your models here.
 
 # Create custom user manager here
@@ -128,7 +129,7 @@ class Win(models.Model):
   title = models.CharField(max_length=75)
   occured_date = models.DateField(null=True, blank=True, auto_now_add=False)
   win = models.TextField()
-  win_picture = models.ImageField(null=True, blank=True)
+  win_picture = models.ImageField(upload_to='win_picture', null=True, blank=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wins')
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now= True)
@@ -196,7 +197,7 @@ class Job(models.Model):
 class Resume(models.Model):
     title = models.CharField(max_length=75)
     notes = models.TextField(max_length=5000, null=True, blank=True)
-    file = models.FileField(upload_to='resume', null=True, blank=True)
+    resume_file = models.FileField(upload_to='resume_file', null=True, blank=True)
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='resumes', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='resumes')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -211,8 +212,8 @@ class Resume(models.Model):
 class CoverLetter(models.Model):
     title = models.CharField(max_length=75)
     notes = models.TextField(max_length=5000, null=True, blank=True)
-    file = models.FileField(upload_to='coverletter',null=True, blank=True)
-    job = models.ForeignKey(Job, null=True, on_delete=models.CASCADE, related_name='cover_letters')
+    cover_letter_file = models.FileField(upload_to='cover_letter_file', null=True, blank=True)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='cover_letters', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letters')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now= True)

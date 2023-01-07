@@ -8,12 +8,17 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('taggit', '0005_auto_20220424_2025'),
-        ('InternalInterviewService', '0019_alter_starrquestions_tags'),
+        ('InternalInterviewService','0016_alter_coverletter_tags_alter_dossier_tags_and_more'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='dossier',
+            name='tags',
+            field=taggit.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags'),
+        ),
+        migrations.AlterField(
+            model_name='starrquestions',
             name='tags',
             field=taggit.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags'),
         ),

@@ -204,7 +204,33 @@ DELETE /wins/pk
 ```json
 204 No Content
 ```
-
+## Add a win picture
+### Request
+requirements: user must be logged in
+required fields: Selected File
+```File
+PATCH /win-picture/pk
+{
+	Selected File: "~/Documents/MyWinPicture.jpeg"
+}
+```
+### Response
+response: If response is the same as the information you provided creation was successful
+```json
+200 OK
+{
+	"pk": 1,
+	"title": "Example Win Title",
+	"notes": "Example Win Notes",
+	"cover_letter_file": "http://127.0.0.1:8000/media/win_picture/MyWinPicture.jpeg",
+	"created_at": "2023-01-07T10:11:36.694523-05:00",
+	"updated_at": "2023-01-07T10:12:32.381075-05:00",
+	"draft": false,
+	"tags": [
+		"example tag"
+	]
+}
+```
 ## Create a Starr Story
 ### Request
 requirements: user must be logged in
