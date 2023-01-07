@@ -33,4 +33,15 @@ class Migration(migrations.Migration):
             name='tags',
             field=taggit.managers.TaggableManager(help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags'),
         ),
+        migrations.AlterField(
+            model_name='starrquestions',
+            name='tags',
+            field=taggit.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags'),
+        ),
+
+        migrations.AlterField(
+            model_name='dossier',
+            name='tags',
+            field=taggit.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags'),
+        ),
     ]
