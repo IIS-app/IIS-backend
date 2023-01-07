@@ -282,9 +282,9 @@ class ShortPersonalPitch(models.Model):
     title = models.CharField(max_length=75)
     user =  models.ForeignKey(User, on_delete=models.CASCADE, related_name='short_personal_pitch')
     pitch = models.TextField(max_length=650)
-    draft = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now= True)
+    draft = models.BooleanField(default=True)
     tags = TaggableManager(blank=True)
 
     def __str__(self):
@@ -294,9 +294,9 @@ class LongPersonalPitch(models.Model):
     title = models.CharField(max_length=75)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='long_personal_pitch')
     pitch = models.TextField(max_length=1300)
-    draft = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now= True)
+    draft = models.BooleanField(default=True)
 
     tags = TaggableManager(blank=True)
 
