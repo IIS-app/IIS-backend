@@ -71,7 +71,7 @@ class CompanyCommentSerializer(serializers.ModelSerializer):
     company_title = serializers.CharField(source='company.company_name', required=False)
     class Meta:
         model = CompanyComments
-        fields = ( 'pk', 'company', 'notes', 'important_date', 'contact', 'created_at', 'updated_at')
+        fields = ( 'pk', 'company', 'company_title', 'notes', 'important_date', 'contact', 'created_at', 'updated_at')
     
 
 class JobCommentSerializer(serializers.ModelSerializer):
