@@ -270,13 +270,8 @@ class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
 
-class SystemQuestionIQDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = SystemQuestion.objects.filter(question_type = 'IQ')
-    serializer_class = SystemQuestionSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
-
-class SystemQuestionCQDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = SystemQuestion.objects.filter(question_type = 'CQ')
+class SystemQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SystemQuestion.objects.all()
     serializer_class = SystemQuestionSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
 
