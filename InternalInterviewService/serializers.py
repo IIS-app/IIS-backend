@@ -41,11 +41,27 @@ class CoverLetterSerializer(TaggitSerializer, serializers.ModelSerializer):
         model = CoverLetter
         fields = ('pk', 'title', 'notes','file', 'created_at', 'updated_at', 'draft', 'tags')
 
+    def update(self, instance, validated_data):
+        if "file" in self.initial_data:
+            file = self.initial_data.get("file")
+            instance.cover_letter_file.save(file.name, file, save=True)
+            return instance
+        # this call to super is to make sure that update still works for other fields
+        return super().update(instance, validated_data)
+
 class ResumeSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     class Meta:
         model = Resume
         fields = ('pk', 'title', 'notes', 'file', 'created_at', 'updated_at', 'tags')
+
+    def update(self, instance, validated_data):
+        if "file" in self.initial_data:
+            file = self.initial_data.get("file")
+            instance.resume_file.save(file.name, file, save=True)
+            return instance
+        # this call to super is to make sure that update still works for other fields
+        return super().update(instance, validated_data)
 
 class ShortPersonalPitchSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()

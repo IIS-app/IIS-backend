@@ -66,6 +66,12 @@ class CoverLetterView(generics.ListCreateAPIView):
     def get_queryset(self):
         return CoverLetter.objects.filter(user=self.request.user)
 
+class CoverLetterFileView(generics.UpdateAPIView):
+    queryset = CoverLetter.objects.all()
+    serializer_class = CoverLetterSerializer
+    parser_classes = [parsers.FileUploadParser]
+    permission_classes = [IsAuthenticated]
+
 class ResumeView(generics.ListCreateAPIView):
     queryset = Resume.objects.all()
     serializer_class = ResumeSerializer
@@ -75,6 +81,12 @@ class ResumeView(generics.ListCreateAPIView):
     
     def get_queryset(self):
         return Resume.objects.filter(user=self.request.user)
+
+class ResumeFileView(generics.UpdateAPIView):
+    queryset = Resume.objects.all()
+    serializer_class = ResumeSerializer
+    parser_classes = [parsers.FileUploadParser]
+    permission_classes = [IsAuthenticated]
 
 class InterviewQuestionView(generics.ListCreateAPIView):
     queryset = Question.objects.filter(question_type = 'IQ')

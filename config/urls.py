@@ -56,7 +56,9 @@ urlpatterns = [
     path('user/me<int:pk>', views.UserDetail.as_view(), name='profile'),
     path('dossier/', views.DossierView.as_view(), name='dossier-generic'),
     path('dossier/<int:pk>', views.DossierDetail.as_view(), name='dossier-detail'),
-    path('win-picture/<int:pk>', views.WinPictureView.as_view(), name='win-picture')
+    path('win-picture/<int:pk>', views.WinPictureView.as_view(), name='win-picture'),
+    path('resume-file/<int:pk>', views.ResumeFileView.as_view(), name='resume-file'),
+    path('cover-letter-file/<int:pk>', views.CoverLetterFileView.as_view(), name='cover-letter-file'),
 ]
 
 if settings.DEBUG:
