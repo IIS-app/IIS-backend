@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('InternalInterviewService', '0028_shortpersonalpitch_longpersonalpitch_links'),
+        ('InternalInterviewService', '0027_alter_win_win_picture'),
     ]
 
     operations = [
