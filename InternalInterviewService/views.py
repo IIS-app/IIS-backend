@@ -108,7 +108,7 @@ class SystemQuestionView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
     def get_queryset(self):
-        return Question.objects.filter(user=self.request.user.id)
+        return SystemQuestion.objects.all()
 
 class MyQuestions(generics.ListAPIView):
     queryset = Question.objects.all()
