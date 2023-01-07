@@ -68,47 +68,28 @@ class ResumeView(generics.ListCreateAPIView):
     def get_queryset(self):
         return Resume.objects.filter(user=self.request.user)
 
-class InterviewQuestionView(generics.ListCreateAPIView):
-    queryset = Question.objects.filter(question_type = 'IQ')
+
+class QuestionView(generics.ListCreateAPIView):
+    queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user, question_type = 'IQ')
+        serializer.save(user=self.request.user)
 
     def get_queryset(self):
-        return Question.objects.filter(user=self.request.user.id, question_type='IQ')
+        return Question.objects.filter(user=self.request.user.id)
 
-class CompanyQuestionView(generics.ListCreateAPIView):
-    queryset = Question.objects.filter(question_type = 'CQ')
-    serializer_class = QuestionSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user, question_type='CQ')
-
-    def get_queryset(self):
-        return Question.objects.filter(user=self.request.user.id, question_type = 'CQ')
-
-class SystemQuestionIQView(generics.ListCreateAPIView):
-    queryset = SystemQuestion.objects.filter(question_type = 'IQ')
+class SystemQuestionView(generics.ListCreateAPIView):
+    queryset = SystemQuestion.objects.all()
     serializer_class = SystemQuestionSerializer
     permission_classes = [IsAdminOrReadOnly]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user, question_type='IQ')
+        serializer.save(user=self.request.user)
 
     def get_queryset(self):
-        return Question.objects.filter(user=self.request.user.id, question_type = 'IQ')
+        return Question.objects.filter(user=self.request.user.id)
 
-class SystemQuestionCQView(generics.ListCreateAPIView):
-    queryset = SystemQuestion.objects.filter(question_type = 'CQ')
-    serializer_class = SystemQuestionSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user, question_type='CQ')
-
-    def get_queryset(self):
-        return Question.objects.filter(user=self.request.user.id, question_type = 'CQ')
 
 
 
@@ -129,7 +110,7 @@ class ShortPersonalPitchView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
     
     def get_queryset(self):
-        return Resume.objects.filter(user=self.request.user)
+        return ShortPersonalPitch.objects.filter(user=self.request.user)
 
 
 class LongPersonalPitchView(generics.ListCreateAPIView):
@@ -141,7 +122,7 @@ class LongPersonalPitchView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
     
     def get_queryset(self):
-        return Resume.objects.filter(user=self.request.user)
+        return LongPersonalPitch.objects.filter(user=self.request.user)
 
 class LinksView(generics.ListCreateAPIView):
     queryset = Links.objects.all()
@@ -152,7 +133,7 @@ class LinksView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
     
     def get_queryset(self):
-        return Resume.objects.filter(user=self.request.user)
+        return Links.objects.filter(user=self.request.user)
 
 class CompanyCommentsView(generics.ListCreateAPIView):
     queryset = CompanyComments.objects.all()

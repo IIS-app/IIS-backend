@@ -34,11 +34,6 @@ class CoverLetterSerializer(TaggitSerializer, serializers.ModelSerializer):
         model = CoverLetter
         fields = ('pk', 'title', 'notes','file', 'created_at', 'updated_at', 'draft', 'tags')
 
-class ResumeSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
-    class Meta:
-        model = Resume
-        fields = ('pk', 'title', 'notes', 'file', 'created_at', 'updated_at', 'tags')
 
 class ShortPersonalPitchSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
@@ -46,26 +41,27 @@ class ShortPersonalPitchSerializer(TaggitSerializer, serializers.ModelSerializer
         model = ShortPersonalPitch
         fields = ('pk', 'title', 'pitch', 'created_at', 'updated_at', 'draft', 'tags')
 
+
 class LongPersonalPitchSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     class Meta:
         model = LongPersonalPitch
         fields = ('pk', 'title', 'pitch', 'created_at', 'updated_at', 'draft',  'tags')
 
+
 class LinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Links
         fields = ('pk', 'title', 'link', 'created_at', 'updated_at')
-    
-
 
 class QuestionSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
-    question_type = serializers.CharField(read_only=True)
     class Meta:
         model = Question
         fields = ('pk','question', 'answer', 'created_at', 'updated_at', 'draft', 'tags', 'question_type')
-        read_only_fields = ('question_type', )
+
+
+
 
 class CompanyCommentSerializer(serializers.ModelSerializer):
     company_title = serializers.CharField(source='company.company_name', required=False)
@@ -138,4 +134,10 @@ class DossierDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
         fields = ['id', 'title', 'job', 'job_title', 'company', 'starrs','starr_titles', 'resume', 'resume_title', 'cover_letter','cover_letter_title', 'questions', 'question_titles', 'wins', 'win_titles', 'user', 'created_at', 'updated_at', 'draft', 'tags']
         read_only_fields = ['job_title','starr_titles','win_titles']
 
+
+class ResumeSerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField()
+    class Meta:
+        model = Resume
+        fields = ('pk', 'title', 'notes', 'file', 'created_at', 'updated_at', 'tags')
 
