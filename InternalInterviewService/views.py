@@ -13,6 +13,7 @@ from django.core.files.storage import FileSystemStorage
 class WinView(generics.ListCreateAPIView):
     queryset = Win.objects.all()
     serializer_class = WinSerializer
+    permission_classes = (IsAuthenticated)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -117,7 +118,7 @@ class SystemQuestionIQView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user, question_type='IQ')
 
     def get_queryset(self):
-        return SystemQuestion.objects.filter(user=self.request.user.id, question_type = 'IQ')
+        return Question.objects.filter(user=self.request.user.id, question_type = 'IQ')
 
 class SystemQuestionCQView(generics.ListCreateAPIView):
     queryset = SystemQuestion.objects.filter(question_type = 'CQ')
@@ -128,12 +129,22 @@ class SystemQuestionCQView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user, question_type='CQ')
 
     def get_queryset(self):
-        return SystemQuestion.objects.filter(user=self.request.user.id, question_type = 'CQ')
+        return Question.objects.filter(user=self.request.user.id, question_type = 'CQ')
 
+
+
+class MyQuestions(generics.ListAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer 
+    permission_classes = [IsAuthenticated, IsOwner]
+    
+    def get_queryset(self):
+        return Question.objects.filter(user=self.request.user)
 
 class ShortPersonalPitchView(generics.ListCreateAPIView):
     queryset = ShortPersonalPitch.objects.all()
     serializer_class = ShortPersonalPitchSerializer
+    permission_classes = (IsAuthenticated)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -145,6 +156,7 @@ class ShortPersonalPitchView(generics.ListCreateAPIView):
 class LongPersonalPitchView(generics.ListCreateAPIView):
     queryset = LongPersonalPitch.objects.all()
     serializer_class = LongPersonalPitchSerializer
+    permission_classes = (IsAuthenticated)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -155,6 +167,7 @@ class LongPersonalPitchView(generics.ListCreateAPIView):
 class LinksView(generics.ListCreateAPIView):
     queryset = Links.objects.all()
     serializer_class = LinkSerializer
+    permission_classes = (IsAuthenticated)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -165,6 +178,7 @@ class LinksView(generics.ListCreateAPIView):
 class CompanyCommentsView(generics.ListCreateAPIView):
     queryset = CompanyComments.objects.all()
     serializer_class = CompanyCommentSerializer
+    permission_classes = (IsAuthenticated)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -175,6 +189,7 @@ class CompanyCommentsView(generics.ListCreateAPIView):
 class JobCommentsView(generics.ListCreateAPIView):
     queryset = JobComments.objects.all()
     serializer_class = JobCommentSerializer
+    permission_classes = (IsAuthenticated)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -185,6 +200,7 @@ class JobCommentsView(generics.ListCreateAPIView):
 class TargetJobView(generics.ListCreateAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
+    permission_classes = (IsAuthenticated)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -195,6 +211,7 @@ class TargetJobView(generics.ListCreateAPIView):
 class DossierView(generics.ListCreateAPIView):
     queryset = Dossier.objects.all()
     serializer_class = DossierSerializer
+    permission_classes = (IsAuthenticated)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -269,23 +286,13 @@ class ResumeDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ResumeSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 
-class InterviewQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Question.objects.filter(question_type = 'IQ')
+class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
-
-class CompanyQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Question.objects.filter(question_type = 'CQ')
-    serializer_class = QuestionSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
-
-class SystemQuestionIQDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = SystemQuestion.objects.filter(question_type = 'IQ')
-    serializer_class = SystemQuestionSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
 
-class SystemQuestionCQDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = SystemQuestion.objects.filter(question_type = 'CQ')
+class SystemQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SystemQuestion.objects.all()
     serializer_class = SystemQuestionSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
 

@@ -25,6 +25,7 @@ class TargetCompanySerializer(TaggitSerializer, serializers.ModelSerializer):
         fields = ('pk', 'company_name', 'rank', 'website', 'job_page', 'comments','created_at', 'updated_at', 'tags')
 
 class CompanyContactsSerializer(serializers.ModelSerializer):
+    company_title = serializers.CharField(source = 'company.company_title', required=False)
     class Meta:
         model = CompanyContacts
         fields = ('pk', 'company', 'name', 'email', 'notes', 'created_at', 'updated_at')
@@ -91,21 +92,24 @@ class QuestionSerializer(TaggitSerializer, serializers.ModelSerializer):
         read_only_fields = ('question_type', )
 
 class CompanyCommentSerializer(serializers.ModelSerializer):
+    company_title = serializers.CharField(source='company.company_name', required=False)
     class Meta:
         model = CompanyComments
         fields = ( 'pk', 'company', 'notes', 'important_date', 'contact', 'created_at', 'updated_at')
     
 
 class JobCommentSerializer(serializers.ModelSerializer):
+    job_title = serializers.CharField(source='job.title', required=False)
     class meta:
         model = JobComments
-        fields = ('pk', 'job', 'notes', 'important_date', 'created_at', 'updated_at')
+        fields = ('pk', 'job', 'job_title', 'notes', 'important_date', 'created_at', 'updated_at')
 
 class JobSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
+    company_title = serializers.CharField(source='company.company_name', required=False)
     class Meta:
         model = Job
-        fields = ('pk', 'title', 'notes', 'job_listing', 'company', 'created_at', 'updated_at', 'tags')
+        fields = ('pk', 'title', 'notes', 'job_listing', 'company', 'company_title', 'created_at', 'updated_at', 'tags')
 
 class SystemQuestionSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
@@ -127,12 +131,13 @@ class DossierSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 class DossierDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
-    job_title = serializers.CharField(source='job.title')
-    company = serializers.CharField(source='job.company')
-    resume_title = serializers.CharField(source='resume.title')
-    cover_letter_title = serializers.CharField(source='cover_letter.title')
-    starr_titles = serializers.SerializerMethodField()
-    win_titles = serializers.SerializerMethodField()
+    job_title = serializers.CharField(source='job.title', required=False)
+    company = serializers.CharField(source='job.company', required=False)
+    resume_title = serializers.CharField(source='resume.title', required=False)
+    cover_letter_title = serializers.CharField(source='cover_letter.title', required=False)
+    starr_titles = serializers.SerializerMethodField(required=False)
+    win_titles = serializers.SerializerMethodField(required=False)
+    question_titles = serializers.SerializerMethodField(required=False)
 
     def get_starr_titles(self, obj):
         starr_titles = []
@@ -146,7 +151,7 @@ class DossierDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
             win_titles.append({'id': win.id, 'title': win.title})
         return win_titles
 
-    def get_question_titles_types(self, obj):
+    def get_question_titles(self, obj):
         question_titles = []
         for question in obj.questions.all():
             question_titles.append({'id': question.id, 'title': question.question, 'type': question.QUESTION_TYPE})
@@ -154,7 +159,7 @@ class DossierDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
 
     class Meta:
         model = Dossier
-        fields = ['id', 'title', 'job', 'job_title','starrs','starr_titles', 'resume', 'resume_title', 'cover_letter','cover_letter_title', 'questions', 'wins', 'win_titles', 'user', 'created_at', 'updated_at', 'draft', 'tags']
+        fields = ['id', 'title', 'job', 'job_title', 'company', 'starrs','starr_titles', 'resume', 'resume_title', 'cover_letter','cover_letter_title', 'questions', 'question_titles', 'wins', 'win_titles', 'user', 'created_at', 'updated_at', 'draft', 'tags']
         read_only_fields = ['job_title','starr_titles','win_titles']
 
 
