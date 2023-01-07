@@ -19,9 +19,5 @@ class Migration(migrations.Migration):
             model_name='resume',
             old_name='file',
             new_name='resume_file',
-        ),
-        migrations.RemoveField(
-            model_name='systemquestion',
-            name='user',
-        ),
+        )
     ]
