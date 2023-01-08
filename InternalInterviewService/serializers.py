@@ -113,9 +113,10 @@ class JobCommentSerializer(serializers.ModelSerializer):
 class JobSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     company_title = serializers.CharField(source='company.company_name', required=False)
+    dossier_title = serializers.CharField(source='dossier.title', required=False)
     class Meta:
         model = Job
-        fields = ('pk', 'title', 'notes', 'job_listing', 'company', 'company_title', 'created_at', 'updated_at', 'tags')
+        fields = ('pk', 'title', 'notes', 'job_listing', 'company', 'company_title', 'dossier', 'dossier_title', 'created_at', 'updated_at', 'tags')
 
 
         
@@ -132,7 +133,6 @@ class DossierSerializer(TaggitSerializer, serializers.ModelSerializer):
 
 class DossierDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
-    job_title = serializers.CharField(source='job.title', required=False)
     company = serializers.CharField(source='job.company', required=False)
     resume_title = serializers.CharField(source='resume.title', required=False)
     cover_letter_title = serializers.CharField(source='cover_letter.title', required=False)
@@ -160,7 +160,7 @@ class DossierDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
 
     class Meta:
         model = Dossier
-        fields = ['id', 'title', 'job', 'job_title', 'company', 'starrs','starr_titles', 'resume', 'resume_title', 'cover_letter','cover_letter_title', 'questions', 'question_titles', 'wins', 'win_titles', 'user', 'created_at', 'updated_at', 'draft', 'tags']
+        fields = ['id', 'title', 'company', 'starrs','starr_titles', 'resume', 'resume_title', 'cover_letter','cover_letter_title', 'questions', 'question_titles', 'wins', 'win_titles', 'user', 'created_at', 'updated_at', 'draft', 'tags']
         read_only_fields = ['job_title','starr_titles','win_titles']
 
 

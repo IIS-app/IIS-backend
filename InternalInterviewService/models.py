@@ -177,28 +177,12 @@ class CompanyContacts(models.Model):
     def __str__(self):
         return self.name
 
-# Create Job model here
-class Job(models.Model):
-  title = models.CharField(max_length=75)
-  notes = models.TextField(null=True, blank=True)
-  job_listing = models.URLField()
-  Dossier = models.TextField(null=True, blank=True)
-  company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE, related_name='jobs', null=True, blank=True)
-  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs')
-  created_at = models.DateTimeField(auto_now_add=True)
-  updated_at = models.DateTimeField(auto_now= True)
-
-  tags = TaggableManager(blank=False)
-
-  def __str__(self):
-    return self.title
 
 # Create Resume model here
 class Resume(models.Model):
     title = models.CharField(max_length=75)
     notes = models.TextField(max_length=5000, null=True, blank=True)
     resume_file = models.FileField(upload_to='resume_file', null=True, blank=True)
-    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='resumes', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='resumes')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now= True)
@@ -213,7 +197,6 @@ class CoverLetter(models.Model):
     title = models.CharField(max_length=75)
     notes = models.TextField(max_length=5000, null=True, blank=True)
     cover_letter_file = models.FileField(upload_to='cover_letter_file', null=True, blank=True)
-    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='cover_letters', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letters')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now= True)
@@ -228,7 +211,6 @@ class CoverLetter(models.Model):
 #Create Dossier model here
 class Dossier(models.Model):
   title = models.CharField(max_length=75)
-  job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='dossiers')
   resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='dossiers',blank=True, null=True)
   cover_letter = models.ForeignKey(CoverLetter, on_delete=models.CASCADE, related_name='dossiers', blank=True, null=True)
   starrs = models.ManyToManyField(StarrQuestions, null=True, blank=True)
@@ -242,6 +224,26 @@ class Dossier(models.Model):
 
   def __str__(self):
     return self.title
+
+
+    # Create Job model here
+class Job(models.Model):
+  title = models.CharField(max_length=75)
+  notes = models.TextField(null=True, blank=True)
+  job_listing = models.URLField()
+  dossier = models.OneToOneField(Dossier,on_delete=models.CASCADE, null=True, blank=True)
+  company = models.ForeignKey(TargetCompany, on_delete=models.CASCADE, related_name='jobs', null=True, blank=True)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs')
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now= True)
+
+  tags = TaggableManager(blank=False)
+
+  def __str__(self):
+    return self.title
+
+
+
 
 # Create Interview model here
 class Interview(models.Model):
