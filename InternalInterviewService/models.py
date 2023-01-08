@@ -98,7 +98,6 @@ class SystemQuestion(models.Model):
   ]
   question_type = models.CharField(max_length=2,choices=QUESTION_TYPE)
   question = models.CharField(max_length=75)
-  user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
   
   tags = TaggableManager(blank=True)
 
