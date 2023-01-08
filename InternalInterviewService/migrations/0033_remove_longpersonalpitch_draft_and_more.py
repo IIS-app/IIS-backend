@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('InternalInterviewService', '0032_remove_systemquestion_user'),
+        ('InternalInterviewService', '0031_alter_coverletter_job'),
     ]
 
     operations = [
