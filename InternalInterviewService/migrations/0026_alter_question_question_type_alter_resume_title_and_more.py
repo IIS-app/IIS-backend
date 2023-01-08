@@ -32,7 +32,6 @@ class Migration(migrations.Migration):
                 ('question_type', models.CharField(choices=[('IQ', 'Interview Questions'), ('CQ', 'Company Questions')], max_length=2)),
                 ('question', models.CharField(max_length=75)),
                 ('tags', taggit.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='system_questions', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
