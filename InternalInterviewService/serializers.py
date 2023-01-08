@@ -89,7 +89,12 @@ class QuestionSerializer(TaggitSerializer, serializers.ModelSerializer):
         model = Question
         fields = ('pk','question', 'answer', 'created_at', 'updated_at', 'draft', 'tags', 'question_type')
 
-
+class SystemQuestionSerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField()
+    class Meta:
+        model = SystemQuestion
+        fields = ('pk', 'question', 'tags', 'question_type')
+        read_only_fields = ('question_type', )
 
 
 class CompanyCommentSerializer(serializers.ModelSerializer):
@@ -112,12 +117,7 @@ class JobSerializer(TaggitSerializer, serializers.ModelSerializer):
         model = Job
         fields = ('pk', 'title', 'notes', 'job_listing', 'company', 'company_title', 'created_at', 'updated_at', 'tags')
 
-class SystemQuestionSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
-    class Meta:
-        model = SystemQuestion
-        fields = ('pk', 'question', 'tags', 'question_type')
-        read_only_fields = ('question_type', )
+
         
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

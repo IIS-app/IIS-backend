@@ -102,13 +102,12 @@ class QuestionView(generics.ListCreateAPIView):
 class SystemQuestionView(generics.ListCreateAPIView):
     queryset = SystemQuestion.objects.all()
     serializer_class = SystemQuestionSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
 
     def get_queryset(self):
         return SystemQuestion.objects.all()
+
+
+
 
 class MyQuestions(generics.ListAPIView):
     queryset = Question.objects.all()
