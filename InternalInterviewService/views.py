@@ -8,6 +8,55 @@ from django.views.generic.edit import CreateView
 # from django.urls import reverse_lazy
 from django.core.files.storage import FileSystemStorage
 
+#for pdf generation
+from django.http import FileResponse
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+
+# Generate a pdf with dossier
+
+def dossier_pdf(request):
+    # Get the PK of the Dossier from the request
+    pk = request.POST.get('pk')
+    # Retrieve the Dossier object
+    dossier = Dossier.objects.get(pk=pk)
+
+    # Create a new PDF
+    pdf = canvas.Canvas('output.pdf')
+
+    # Add the title to the PDF
+    pdf.drawString(100, 750, dossier.title)
+
+    # Add the resume to the PDF
+    pdf.drawString(100, 700, dossier.resume.text)
+
+    # Add the cover letter to the PDF
+    pdf.drawString(100, 650, dossier.cover_letter.text)
+
+    # Iterate through the STARR questions and add them to the PDF
+    for question in dossier.starrs.all():
+        pdf.drawString(100, 600, question.text)
+
+    # Iterate through the questions and add them to the PDF
+    for question in dossier.questions.all():
+        pdf.drawString(100, 550, question.text)
+
+    # Iterate through the wins and add them to the PDF
+    for win in dossier.wins.all():
+        pdf.drawString(100, 500, win.text)
+
+    # Save the PDF
+    pdf.save()
+
+    # Open the PDF file in binary mode
+    with open('output.pdf', 'rb') as f:
+        # Create an HttpResponse object with the PDF file's contents
+        response = HttpResponse(f.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename=output.pdf'
+        return response
+
 # Create views here
 
 class WinView(generics.ListCreateAPIView):
@@ -125,7 +174,6 @@ class ShortPersonalPitchView(generics.ListCreateAPIView):
     def get_queryset(self):
         return ShortPersonalPitch.objects.filter(user=self.request.user)
 
-
 class LongPersonalPitchView(generics.ListCreateAPIView):
     queryset = LongPersonalPitch.objects.all()
     serializer_class = LongPersonalPitchSerializer
@@ -197,8 +245,6 @@ class DossierDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = DossierDetailSerializer
     permission_classes = [IsOwner, IsAuthenticated]
 
-
-
 class TargetJobDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
@@ -269,7 +315,6 @@ class SystemQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SystemQuestionSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
 
-
 class UserDetail(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -278,3 +323,36 @@ class UserDetail(generics.RetrieveUpdateAPIView):
     def get_queryset(self):
         return User.objects.filter(id = self.request.user.id())
 
+# def render_to_pdf(template_src, context_dict={}):
+# 	template = get_template(template_src)
+# 	html  = template.render(context_dict)
+# 	result = BytesIO()
+# 	pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+# 	if not pdf.err:
+# 		return HttpResponse(result.getvalue(), content_type='application/pdf')
+# 	return None
+
+# data = {
+#     'name': 'test',
+#     'description': 'test',
+# }
+
+# #Opens up page as PDF
+# class ViewPDF(View):
+# 	def get(self, request, *args, **kwargs):
+
+# 		pdf = render_to_pdf('app/dossier_pdf_template.html', data)
+# 		return HttpResponse(pdf, content_type='application/pdf')
+
+
+# #Automaticly downloads to PDF file
+# class DownloadPDF(View):
+# 	def get(self, request, *args, **kwargs):
+		
+# 		pdf = render_to_pdf('app/pdf_template.html', data)
+
+# 		response = HttpResponse(pdf, content_type='application/pdf')
+# 		filename = "Invoice_%s.pdf" %("12341231")
+# 		content = "attachment; filename='%s'" %(filename)
+# 		response['Content-Disposition'] = content
+# 		return response

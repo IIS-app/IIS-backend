@@ -16,6 +16,7 @@ pillow = "*"
 django-taggit = "*"
 boto3 = "*"
 django-storages = "*"
+reportlab = "*"
 
 [dev-packages]
 
