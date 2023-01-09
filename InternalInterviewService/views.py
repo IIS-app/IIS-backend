@@ -268,7 +268,7 @@ class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
 class SystemQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = SystemQuestion.objects.all()
     serializer_class = SystemQuestionSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
 
 class UserDetail(generics.RetrieveUpdateAPIView):

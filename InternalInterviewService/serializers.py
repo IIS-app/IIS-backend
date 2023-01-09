@@ -114,7 +114,6 @@ class SystemQuestionSerializer(TaggitSerializer, serializers.ModelSerializer):
     class Meta:
         model = SystemQuestion
         fields = ('pk', 'question', 'tags', 'question_type')
-        read_only_fields = ('question_type', )
 
 
 class CompanyCommentSerializer(serializers.ModelSerializer):
