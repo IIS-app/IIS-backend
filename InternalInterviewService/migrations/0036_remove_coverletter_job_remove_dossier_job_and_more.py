@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('InternalInterviewService', '0035_systemquestion_user'),
+        ('InternalInterviewService', '0034_longpersonalpitch_draft_shortpersonalpitch_draft'),
     ]
 
     operations = [

@@ -128,7 +128,7 @@ TIME_ZONE = 'US/Eastern'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
     
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -174,3 +174,7 @@ if env('USE_S3'):
     AWS_QUERYSTRING_AUTH = False
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
+
+DATETIME_FORMAT="%Y/%m/%H:%M"
+
+L10N=False
