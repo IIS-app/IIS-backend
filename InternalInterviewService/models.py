@@ -52,7 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     github = models.URLField(null=True, blank=True)
     codepen = models.URLField(null=True, blank=True)
     portfolio = models.URLField(null=True, blank=True)
-    personal_pitch = models.TextField(null=True, blank=True, max_length=1000)
+    personal_pitch = models.TextField(null=True, blank=True, max_length=5000)
 
 
     USERNAME_FIELD = 'email'
@@ -76,7 +76,7 @@ class Question(models.Model):
       (COMPANY_QUESTIONS, 'Company Questions')
   ]
   question_type = models.CharField(max_length=2,choices=QUESTION_TYPE)
-  question = models.CharField(max_length=75)
+  question = models.CharField(max_length=200)
   answer = models.TextField(null=True, blank=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='questions')
   created_at = models.DateTimeField(auto_now_add=True)
@@ -97,7 +97,7 @@ class SystemQuestion(models.Model):
       (COMPANY_QUESTIONS, 'Company Questions'),
   ]
   question_type = models.CharField(max_length=2,choices=QUESTION_TYPE)
-  question = models.CharField(max_length=75)
+  question = models.CharField(max_length=5000)
   
   tags = TaggableManager(blank=True)
 
@@ -108,13 +108,13 @@ class SystemQuestion(models.Model):
 # Create StarrQuestions model here
 class StarrQuestions(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    question = models.TextField(max_length=500)
-    summary = models.TextField(max_length=1000, null=True, blank=True)
-    situation = models.TextField(max_length=500, null=True, blank=True)
-    task = models.TextField(max_length=500, null=True, blank=True)
-    action = models.TextField(max_length=500, null=True, blank=True)
-    reflection = models.TextField(max_length=500, null=True, blank=True)
-    result = models.TextField(max_length=500, null=True, blank=True)
+    question = models.TextField(max_length=5000)
+    summary = models.TextField(max_length=5000, null=True, blank=True)
+    situation = models.TextField(max_length=5000, null=True, blank=True)
+    task = models.TextField(max_length=5000, null=True, blank=True)
+    action = models.TextField(max_length=5000, null=True, blank=True)
+    reflection = models.TextField(max_length=5000, null=True, blank=True)
+    result = models.TextField(max_length=5000, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now= True)
     draft = models.BooleanField(default=True)
@@ -126,7 +126,7 @@ class StarrQuestions(models.Model):
 
 # Create Win model here
 class Win(models.Model):
-  title = models.CharField(max_length=75)
+  title = models.CharField(max_length=200)
   occured_date = models.DateField(null=True, blank=True, auto_now_add=False)
   win = models.TextField()
   win_picture = models.ImageField(upload_to='win_picture', null=True, blank=True)
@@ -180,7 +180,7 @@ class CompanyContacts(models.Model):
 
 # Create Resume model here
 class Resume(models.Model):
-    title = models.CharField(max_length=75)
+    title = models.CharField(max_length=200)
     notes = models.TextField(max_length=5000, null=True, blank=True)
     resume_file = models.FileField(upload_to='resume_file', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='resumes')
@@ -194,7 +194,7 @@ class Resume(models.Model):
 
 # Create CoverLetter model here
 class CoverLetter(models.Model):
-    title = models.CharField(max_length=75)
+    title = models.CharField(max_length=200)
     notes = models.TextField(max_length=5000, null=True, blank=True)
     cover_letter_file = models.FileField(upload_to='cover_letter_file', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cover_letters')
@@ -210,7 +210,7 @@ class CoverLetter(models.Model):
     
 #Create Dossier model here
 class Dossier(models.Model):
-  title = models.CharField(max_length=75)
+  title = models.CharField(max_length=200)
   resume = models.ForeignKey(Resume, on_delete=models.CASCADE, related_name='dossiers',blank=True, null=True)
   cover_letter = models.ForeignKey(CoverLetter, on_delete=models.CASCADE, related_name='dossiers', blank=True, null=True)
   starrs = models.ManyToManyField(StarrQuestions, null=True, blank=True)
@@ -228,7 +228,7 @@ class Dossier(models.Model):
 
     # Create Job model here
 class Job(models.Model):
-  title = models.CharField(max_length=75)
+  title = models.CharField(max_length=200)
   notes = models.TextField(null=True, blank=True)
   job_listing = models.URLField()
   dossier = models.OneToOneField(Dossier,on_delete=models.CASCADE, null=True, blank=True)
@@ -247,7 +247,7 @@ class Job(models.Model):
 
 # Create Interview model here
 class Interview(models.Model):
-  title = models.CharField(max_length=75)
+  title = models.CharField(max_length=200)
   job = models.ForeignKey(Job, null=True, on_delete=models.CASCADE, related_name='jobs')
   notes = models.TextField()
   date = models.DateField(null=True, blank=True, auto_now_add=False)
@@ -266,7 +266,7 @@ class Interview(models.Model):
 
 # Create Goal model here
 class Goal(models.Model):
-  title = models.CharField(max_length=75)
+  title = models.CharField(max_length=200)
   number = models.PositiveIntegerField()
   metric = models.CharField(max_length=50)
   date_to_complete = models.DateField(blank=True, null=True, auto_now_add=False)
@@ -281,9 +281,9 @@ class Goal(models.Model):
     return self.title
 
 class ShortPersonalPitch(models.Model):
-    title = models.CharField(max_length=75)
+    title = models.CharField(max_length=200)
     user =  models.ForeignKey(User, on_delete=models.CASCADE, related_name='short_personal_pitch')
-    pitch = models.TextField(max_length=650)
+    pitch = models.TextField(max_length=5000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now= True)
     draft = models.BooleanField(default=True)
@@ -293,9 +293,9 @@ class ShortPersonalPitch(models.Model):
         return self.title
 
 class LongPersonalPitch(models.Model):
-    title = models.CharField(max_length=75)
+    title = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='long_personal_pitch')
-    pitch = models.TextField(max_length=1300)
+    pitch = models.TextField(max_length=5000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now= True)
     draft = models.BooleanField(default=True)
@@ -307,7 +307,7 @@ class LongPersonalPitch(models.Model):
 
 class Links(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='links')
-    title = models.CharField(max_length=75)
+    title = models.CharField(max_length=200)
     link = models.URLField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now= True)
