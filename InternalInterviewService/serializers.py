@@ -75,14 +75,14 @@ class ShortPersonalPitchSerializer(TaggitSerializer, serializers.ModelSerializer
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     class Meta:
         model = ShortPersonalPitch
-        fields = ('pk', 'title', 'pitch', 'created_at', 'updated_at', 'draft', 'tags')
+        fields = ('pk', 'title', 'pitch', 'created_at', 'updated_at', 'draft')
 
 class LongPersonalPitchSerializer(TaggitSerializer, serializers.ModelSerializer):
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     class Meta:
         model = LongPersonalPitch
-        fields = ('pk', 'title', 'pitch', 'created_at', 'updated_at', 'draft',  'tags')
+        fields = ('pk', 'title', 'pitch', 'created_at', 'updated_at', 'draft')
 
 class LinkSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
