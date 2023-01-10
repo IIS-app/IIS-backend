@@ -2,8 +2,7 @@ from rest_framework import serializers
 from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links, CompanyComments, JobComments, Job, User, Dossier, SystemQuestion
 from taggit.serializers import (TagListSerializerField,
                                 TaggitSerializer)
-
-                                
+                             
 class WinSerializer(TaggitSerializer, serializers.ModelSerializer):
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
@@ -76,16 +75,14 @@ class ShortPersonalPitchSerializer(TaggitSerializer, serializers.ModelSerializer
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     class Meta:
         model = ShortPersonalPitch
-        fields = ('pk', 'title', 'pitch', 'created_at', 'updated_at', 'draft')
-
+        fields = ('pk', 'title', 'pitch', 'created_at', 'updated_at', 'draft', 'tags')
 
 class LongPersonalPitchSerializer(TaggitSerializer, serializers.ModelSerializer):
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     class Meta:
         model = LongPersonalPitch
-        fields = ('pk', 'title', 'pitch', 'created_at', 'updated_at', 'draft')
-
+        fields = ('pk', 'title', 'pitch', 'created_at', 'updated_at', 'draft',  'tags')
 
 class LinkSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
@@ -106,7 +103,6 @@ class SystemQuestionSerializer(TaggitSerializer, serializers.ModelSerializer):
         model = SystemQuestion
         fields = ('pk', 'question', 'question_type')
 
-
 class CompanyCommentSerializer(serializers.ModelSerializer):
     company_title = serializers.CharField(source='company.company_name', required=False)
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
@@ -115,7 +111,6 @@ class CompanyCommentSerializer(serializers.ModelSerializer):
         model = CompanyComments
         fields = ( 'pk', 'company', 'company_title', 'notes', 'important_date', 'contact', 'created_at', 'updated_at')
     
-
 class JobCommentSerializer(serializers.ModelSerializer):
     job_title = serializers.CharField(source='job.title', required=False)
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
@@ -180,11 +175,11 @@ class DossierDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
         fields = ['id', 'title', 'company', 'starrs','starr_titles', 'resume', 'resume_title', 'cover_letter','cover_letter_title', 'questions', 'question_titles', 'wins', 'win_titles', 'user', 'created_at', 'updated_at', 'draft']
         read_only_fields = ['job_title','starr_titles','win_titles']
 
-
-class ResumeSerializer(TaggitSerializer, serializers.ModelSerializer):
-    created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
-    updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
-    class Meta:
-        model = Resume
-        fields = ('pk', 'title', 'notes', 'file', 'created_at', 'updated_at')
+# class ResumeSerializer(TaggitSerializer, serializers.ModelSerializer):
+#     tags = TagListSerializerField()
+#     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
+#     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
+#     class Meta:
+#         model = Resume
+#         fields = ('pk', 'title', 'notes', 'file', 'created_at', 'updated_at', 'tags')
 

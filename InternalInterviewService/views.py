@@ -9,6 +9,84 @@ from django.views.generic.edit import CreateView
 from django.core.files.storage import FileSystemStorage
 from datetime import datetime
 
+#for pdf generation
+from django.http import FileResponse
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+import requests
+from django.http import HttpResponse
+import json
+from django.views.decorators.csrf import csrf_exempt
+
+# Generate a pdf with dossier
+
+@csrf_exempt
+def dossier_pdf(request, pk):
+    # permission_classes = [IsAuthenticated]
+
+    # Get the PK of the Dossier from the request
+
+    # # Parse the request body as JSON
+    # data = json.loads(request.body)
+
+    # # Retrieve the PK of the Dossier from the request
+    # pk = data.get('pk')
+
+    # Try to retrieve the Dossier object
+    try:
+        dossier = Dossier.objects.get(pk=pk)
+    except Dossier.DoesNotExist:
+        # Return a 404 response if the Dossier object does not exist
+        return HttpResponse('Dossier not found', status=404)
+
+    # Create a new PDF
+    pdf = canvas.Canvas('output.pdf')
+
+    # Add the title to the PDF
+    pdf.drawString(100, 750, dossier.title)
+
+    # Add the resume title to the PDF
+    pdf.drawString(100, 700, dossier.resume.title)
+
+    # Add the cover letter title to the PDF
+    pdf.drawString(100, 650, dossier.cover_letter.title)
+
+    # MY STARRS TITLE
+    if dossier.starrs:
+        pdf.drawString(100, 600, "MY STARRS")    
+    # Iterate through the STARR questions and add them to the PDF
+    for starr in dossier.starrs.all():
+        pdf.drawString(100, 525, starr.question)
+        pdf.drawString(100, 526, starr.summary)
+        pdf.drawString(100, 527, starr.situation)
+        pdf.drawString(100, 528, starr.task)
+        pdf.drawString(100, 529, starr.action)
+        pdf.drawString(100, 530, starr.reflection)
+        pdf.drawString(100, 531, starr.result)
+
+    # Iterate through the questions and add them to the PDF
+    for question in dossier.questions.all():
+        pdf.drawString(100, 550, question.question)
+
+    # Iterate through the wins and add them to the PDF
+    for win in dossier.wins.all():
+        pdf.drawString(100, 500, win.title)
+
+    # Save the PDF
+    pdf.save()
+
+    # Open the PDF file in binary mode
+    with open('output.pdf', 'rb') as f:
+        # Create an HttpResponse object with the PDF file's contents
+        response = HttpResponse(f.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename=output.pdf'
+
+        return response
+
+
+
 # Create views here
 
 class WinView(generics.ListCreateAPIView):
@@ -126,7 +204,6 @@ class ShortPersonalPitchView(generics.ListCreateAPIView):
     def get_queryset(self):
         return ShortPersonalPitch.objects.filter(user=self.request.user)
 
-
 class LongPersonalPitchView(generics.ListCreateAPIView):
     queryset = LongPersonalPitch.objects.all()
     serializer_class = LongPersonalPitchSerializer
@@ -198,8 +275,6 @@ class DossierDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = DossierDetailSerializer
     permission_classes = [IsOwner, IsAuthenticated]
 
-
-
 class TargetJobDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
@@ -270,7 +345,6 @@ class SystemQuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SystemQuestionSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
 
-
 class UserDetail(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -278,4 +352,3 @@ class UserDetail(generics.RetrieveUpdateAPIView):
 
     def get_queryset(self):
         return User.objects.filter(id = self.request.user.id())
-

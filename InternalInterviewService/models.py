@@ -104,7 +104,6 @@ class SystemQuestion(models.Model):
   def __str__(self):
     return self.question
 
-  
 # Create StarrQuestions model here
 class StarrQuestions(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -177,7 +176,6 @@ class CompanyContacts(models.Model):
     def __str__(self):
         return self.name
 
-
 # Create Resume model here
 class Resume(models.Model):
     title = models.CharField(max_length=200)
@@ -206,8 +204,7 @@ class CoverLetter(models.Model):
 
     def __str__(self):
         return self.title
-
-    
+   
 #Create Dossier model here
 class Dossier(models.Model):
   title = models.CharField(max_length=200)
@@ -227,6 +224,7 @@ class Dossier(models.Model):
 
 
     # Create Job model here
+
 class Job(models.Model):
   title = models.CharField(max_length=200)
   notes = models.TextField(null=True, blank=True)
@@ -241,9 +239,6 @@ class Job(models.Model):
 
   def __str__(self):
     return self.title
-
-
-
 
 # Create Interview model here
 class Interview(models.Model):
@@ -324,7 +319,6 @@ class CompanyComments(models.Model):
     updated_at = models.DateTimeField(auto_now= True)
     important_date = models.DateTimeField(blank=True, null=True)
     notes = models.TextField()
-
 
 class JobComments(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="job_comments")
