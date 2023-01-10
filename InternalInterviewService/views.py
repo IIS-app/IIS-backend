@@ -5,7 +5,6 @@ from .serializers import WinSerializer, TargetCompanySerializer, CompanyContacts
 from .models import Win, TargetCompany, CompanyContacts, StarrQuestions, CoverLetter, Resume, Question, ShortPersonalPitch, LongPersonalPitch, Links, CompanyComments, JobComments, Job, Dossier, User, SystemQuestion
 from .permissions import IsOwner, IsAdminOrReadOnly
 from django.views.generic.edit import CreateView
-# from django.urls import reverse_lazy
 from django.core.files.storage import FileSystemStorage
 from datetime import datetime
 
@@ -19,20 +18,18 @@ import requests
 from django.http import HttpResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+import os
+import environ
+import boto3
+import botocore
+import pdfrw
+from botocore.exceptions import ClientError
 
 # Generate a pdf with dossier
 
 @csrf_exempt
 def dossier_pdf(request, pk):
-    # permission_classes = [IsAuthenticated]
-
-    # Get the PK of the Dossier from the request
-
-    # # Parse the request body as JSON
-    # data = json.loads(request.body)
-
-    # # Retrieve the PK of the Dossier from the request
-    # pk = data.get('pk')
 
     # Try to retrieve the Dossier object
     try:
@@ -46,12 +43,6 @@ def dossier_pdf(request, pk):
 
     # Add the title to the PDF
     pdf.drawString(100, 750, dossier.title)
-
-    # Add the resume title to the PDF
-    pdf.drawString(100, 700, dossier.resume.title)
-
-    # Add the cover letter title to the PDF
-    pdf.drawString(100, 650, dossier.cover_letter.title)
 
     # MY STARRS TITLE
     if dossier.starrs:
@@ -73,6 +64,67 @@ def dossier_pdf(request, pk):
     # Iterate through the wins and add them to the PDF
     for win in dossier.wins.all():
         pdf.drawString(100, 500, win.title)
+
+    pdf.showPage()
+
+    # Add the resume title to the PDF
+    pdf.drawString(100, 700, dossier.resume.title)
+
+
+    # Retrieve the resume file from the S3 bucket
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+        aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
+    )
+    # Define the S3 bucket and file name
+    bucket_name = os.environ['AWS_STORAGE_BUCKET_NAME']
+    file_name = 'path/to/resume.pdf'
+
+
+    # Download the file from S3 and save it to a variable if it exists
+    try:
+    # Attempt to retrieve the file from S3
+        resume = s3.get_object(Bucket=bucket_name, Key=file_name)['Body']
+        resume = s3.get_object(Bucket=bucket_name, Key=file_name)['Body']
+
+        # Open the downloaded file using pdfrw
+        resume_pdf = pdfrw.PdfReader(resume)
+
+        # Open the generated pdf using pdfrw
+        pdf = pdfrw.PdfReader('output.pdf')
+
+        # Use pdfrw's merge function to combine the two pdfs
+        pdfrw.PageMerge(pdf.pages[0]).add(resume_pdf.pages[0]).render()
+
+        # Save the combined pdf
+        pdfrw.PdfWriter().write('output.pdf', pdf)
+
+        pdf.showPage() 
+    except botocore.exceptions.ClientError as e:
+    # Handle the exception if the file doesn't exist
+        if e.response['Error']['Code'] == "NoSuchKey":
+            print("The Resume doesn't exist")
+        else:
+            raise
+    # resume = s3.get_object(Bucket=bucket_name, Key=file_name)['Body']
+
+    # # Open the downloaded file using pdfrw
+    # resume_pdf = pdfrw.PdfReader(resume)
+
+    # # Open the generated pdf using pdfrw
+    # pdf = pdfrw.PdfReader('output.pdf')
+
+    # # Use pdfrw's merge function to combine the two pdfs
+    # pdfrw.PageMerge(pdf.pages[0]).add(resume_pdf.pages[0]).render()
+
+    # # Save the combined pdf
+    # pdfrw.PdfWriter().write('output.pdf', pdf)
+
+    # pdf.showPage()
+        
+    # Add the cover letter title to the PDF
+    pdf.drawString(100, 650, dossier.cover_letter.title)
 
     # Save the PDF
     pdf.save()
