@@ -17,6 +17,7 @@ django-taggit = "*"
 boto3 = "*"
 django-storages = "*"
 reportlab = "*"
+requests = "*"
 
 [dev-packages]
 

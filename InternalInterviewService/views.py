@@ -14,14 +14,31 @@ import io
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
+import requests
+from django.http import HttpResponse
+import json
+from django.views.decorators.csrf import csrf_exempt
 
 # Generate a pdf with dossier
 
-def dossier_pdf(request):
+@csrf_exempt
+def dossier_pdf(request, pk):
+    # permission_classes = [IsAuthenticated]
+
     # Get the PK of the Dossier from the request
-    pk = request.POST.get('pk')
-    # Retrieve the Dossier object
-    dossier = Dossier.objects.get(pk=pk)
+
+    # # Parse the request body as JSON
+    # data = json.loads(request.body)
+
+    # # Retrieve the PK of the Dossier from the request
+    # pk = data.get('pk')
+
+    # Try to retrieve the Dossier object
+    try:
+        dossier = Dossier.objects.get(pk=pk)
+    except Dossier.DoesNotExist:
+        # Return a 404 response if the Dossier object does not exist
+        return HttpResponse('Dossier not found', status=404)
 
     # Create a new PDF
     pdf = canvas.Canvas('output.pdf')
@@ -29,23 +46,32 @@ def dossier_pdf(request):
     # Add the title to the PDF
     pdf.drawString(100, 750, dossier.title)
 
-    # Add the resume to the PDF
-    pdf.drawString(100, 700, dossier.resume.text)
+    # Add the resume title to the PDF
+    pdf.drawString(100, 700, dossier.resume.title)
 
-    # Add the cover letter to the PDF
-    pdf.drawString(100, 650, dossier.cover_letter.text)
+    # Add the cover letter title to the PDF
+    pdf.drawString(100, 650, dossier.cover_letter.title)
 
+    # MY STARRS TITLE
+    if dossier.starrs:
+        pdf.drawString(100, 600, "MY STARRS")    
     # Iterate through the STARR questions and add them to the PDF
-    for question in dossier.starrs.all():
-        pdf.drawString(100, 600, question.text)
+    for starr in dossier.starrs.all():
+        pdf.drawString(100, 525, starr.question)
+        pdf.drawString(100, 526, starr.summary)
+        pdf.drawString(100, 527, starr.situation)
+        pdf.drawString(100, 528, starr.task)
+        pdf.drawString(100, 529, starr.action)
+        pdf.drawString(100, 530, starr.reflection)
+        pdf.drawString(100, 531, starr.result)
 
     # Iterate through the questions and add them to the PDF
     for question in dossier.questions.all():
-        pdf.drawString(100, 550, question.text)
+        pdf.drawString(100, 550, question.question)
 
     # Iterate through the wins and add them to the PDF
     for win in dossier.wins.all():
-        pdf.drawString(100, 500, win.text)
+        pdf.drawString(100, 500, win.title)
 
     # Save the PDF
     pdf.save()
@@ -55,7 +81,10 @@ def dossier_pdf(request):
         # Create an HttpResponse object with the PDF file's contents
         response = HttpResponse(f.read(), content_type='application/pdf')
         response['Content-Disposition'] = 'inline; filename=output.pdf'
+
         return response
+
+
 
 # Create views here
 
@@ -322,37 +351,3 @@ class UserDetail(generics.RetrieveUpdateAPIView):
 
     def get_queryset(self):
         return User.objects.filter(id = self.request.user.id())
-
-# def render_to_pdf(template_src, context_dict={}):
-# 	template = get_template(template_src)
-# 	html  = template.render(context_dict)
-# 	result = BytesIO()
-# 	pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
-# 	if not pdf.err:
-# 		return HttpResponse(result.getvalue(), content_type='application/pdf')
-# 	return None
-
-# data = {
-#     'name': 'test',
-#     'description': 'test',
-# }
-
-# #Opens up page as PDF
-# class ViewPDF(View):
-# 	def get(self, request, *args, **kwargs):
-
-# 		pdf = render_to_pdf('app/dossier_pdf_template.html', data)
-# 		return HttpResponse(pdf, content_type='application/pdf')
-
-
-# #Automaticly downloads to PDF file
-# class DownloadPDF(View):
-# 	def get(self, request, *args, **kwargs):
-		
-# 		pdf = render_to_pdf('app/pdf_template.html', data)
-
-# 		response = HttpResponse(pdf, content_type='application/pdf')
-# 		filename = "Invoice_%s.pdf" %("12341231")
-# 		content = "attachment; filename='%s'" %(filename)
-# 		response['Content-Disposition'] = content
-# 		return response
