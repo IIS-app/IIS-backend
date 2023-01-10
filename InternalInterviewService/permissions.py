@@ -12,5 +12,5 @@ class IsAdminOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return self.is_staff
+        return request.user.is_staff
 
