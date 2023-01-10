@@ -55,6 +55,7 @@ urlpatterns = [
     path('win-picture/<int:pk>', views.WinPictureView.as_view(), name='win-picture'),
     path('resume-file/<int:pk>', views.ResumeFileView.as_view(), name='resume-file'),
     path('cover-letter-file/<int:pk>', views.CoverLetterFileView.as_view(), name='cover-letter-file'),
+    path('dossier_pdf/<int:pk>', views.dossier_pdf, name='dossier_pdf'),
 ]
 
 if settings.DEBUG:
