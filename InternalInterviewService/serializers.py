@@ -184,7 +184,7 @@ class DossierDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     def get_question_titles(self, obj):
         question_titles = []
         for question in obj.questions.all():
-            question_titles.append({'id': question.id, 'title': question.question, 'type': question.QUESTION_TYPE})
+            question_titles.append({'id': question.id, 'title': question.question, 'type': question.question_type})
         return question_titles
 
     class Meta:
