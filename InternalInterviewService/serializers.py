@@ -5,12 +5,11 @@ from taggit.serializers import (TagListSerializerField,
 
                                 
 class WinSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     class Meta:
         model = Win
-        fields = ('pk', 'title', 'win', 'win_picture', 'created_at', 'updated_at', 'draft', 'tags')
+        fields = ('pk', 'title', 'win', 'win_picture', 'created_at', 'updated_at', 'draft')
 
     def update(self, instance, validated_data):
         if "file" in self.initial_data:
@@ -21,12 +20,11 @@ class WinSerializer(TaggitSerializer, serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 class TargetCompanySerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     class Meta:
         model = TargetCompany
-        fields = ('pk', 'company_name', 'rank', 'website', 'job_page', 'comments','created_at', 'updated_at', 'tags')
+        fields = ('pk', 'company_name', 'rank', 'website', 'job_page', 'comments','created_at', 'updated_at')
 
 class CompanyContactsSerializer(serializers.ModelSerializer):
     company_title = serializers.CharField(source = 'company.company_title', required=False)
@@ -37,20 +35,18 @@ class CompanyContactsSerializer(serializers.ModelSerializer):
         fields = ('pk', 'company', 'name', 'email', 'notes', 'created_at', 'updated_at')
 
 class StarrQuestionsSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     class Meta:
         model = StarrQuestions
-        fields = ('pk', 'question', 'summary', 'situation', 'task', 'action', 'reflection', 'result', 'created_at', 'updated_at', 'draft', 'tags')
+        fields = ('pk', 'question', 'summary', 'situation', 'task', 'action', 'reflection', 'result', 'created_at', 'updated_at', 'draft')
 
 class CoverLetterSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     class Meta:
         model = CoverLetter
-        fields = ('pk', 'title', 'notes','cover_letter_file', 'created_at', 'updated_at', 'draft', 'tags')
+        fields = ('pk', 'title', 'notes','cover_letter_file', 'created_at', 'updated_at', 'draft')
 
     def update(self, instance, validated_data):
         if "file" in self.initial_data:
@@ -61,12 +57,11 @@ class CoverLetterSerializer(TaggitSerializer, serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 class ResumeSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     class Meta:
         model = Resume
-        fields = ('pk', 'title', 'notes', 'resume_file', 'created_at', 'updated_at', 'tags')
+        fields = ('pk', 'title', 'notes', 'resume_file', 'created_at', 'updated_at')
 
     def update(self, instance, validated_data):
         if "file" in self.initial_data:
@@ -77,21 +72,19 @@ class ResumeSerializer(TaggitSerializer, serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 class ShortPersonalPitchSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     class Meta:
         model = ShortPersonalPitch
-        fields = ('pk', 'title', 'pitch', 'created_at', 'updated_at', 'draft', 'tags')
+        fields = ('pk', 'title', 'pitch', 'created_at', 'updated_at', 'draft')
 
 
 class LongPersonalPitchSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     class Meta:
         model = LongPersonalPitch
-        fields = ('pk', 'title', 'pitch', 'created_at', 'updated_at', 'draft',  'tags')
+        fields = ('pk', 'title', 'pitch', 'created_at', 'updated_at', 'draft')
 
 
 class LinkSerializer(serializers.ModelSerializer):
@@ -102,18 +95,16 @@ class LinkSerializer(serializers.ModelSerializer):
         fields = ('pk', 'title', 'link', 'created_at', 'updated_at')
 
 class QuestionSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     class Meta:
         model = Question
-        fields = ('pk','question', 'answer', 'created_at', 'updated_at', 'draft', 'tags', 'question_type')
+        fields = ('pk','question', 'answer', 'created_at', 'updated_at', 'draft', 'question_type')
 
 class SystemQuestionSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
     class Meta:
         model = SystemQuestion
-        fields = ('pk', 'question', 'tags', 'question_type')
+        fields = ('pk', 'question', 'question_type')
 
 
 class CompanyCommentSerializer(serializers.ModelSerializer):
@@ -134,14 +125,13 @@ class JobCommentSerializer(serializers.ModelSerializer):
         fields = ('pk', 'job', 'job_title', 'notes', 'important_date', 'created_at', 'updated_at')
 
 class JobSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
     company_title = serializers.CharField(source='company.company_name', required=False)
     dossier_title = serializers.CharField(source='dossier.title', required=False)
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     class Meta:
         model = Job
-        fields = ('pk', 'title', 'notes', 'job_listing', 'company', 'company_title', 'dossier', 'dossier_title', 'created_at', 'updated_at', 'tags')
+        fields = ('pk', 'title', 'notes', 'job_listing', 'company', 'company_title', 'dossier', 'dossier_title', 'created_at', 'updated_at')
 
 
         
@@ -151,15 +141,13 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'email', 'codename', 'linkedin', 'github', 'codepen', 'portfolio', 'personal_pitch', 'id')
 
 class DossierSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     class Meta:
         model = Dossier
-        fields = ('title', 'job', 'resume', 'cover_letter', 'starrs', 'questions', 'wins', 'created_at', 'updated_at', 'draft', 'tags', 'id')
+        fields = ('title', 'job', 'resume', 'cover_letter', 'starrs', 'questions', 'wins', 'created_at', 'updated_at', 'draft', 'id')
 
 class DossierDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
     company = serializers.CharField(source='job.company', required=False)
     resume_title = serializers.CharField(source='resume.title', required=False)
     cover_letter_title = serializers.CharField(source='cover_letter.title', required=False)
@@ -189,15 +177,14 @@ class DossierDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
 
     class Meta:
         model = Dossier
-        fields = ['id', 'title', 'company', 'starrs','starr_titles', 'resume', 'resume_title', 'cover_letter','cover_letter_title', 'questions', 'question_titles', 'wins', 'win_titles', 'user', 'created_at', 'updated_at', 'draft', 'tags']
+        fields = ['id', 'title', 'company', 'starrs','starr_titles', 'resume', 'resume_title', 'cover_letter','cover_letter_title', 'questions', 'question_titles', 'wins', 'win_titles', 'user', 'created_at', 'updated_at', 'draft']
         read_only_fields = ['job_title','starr_titles','win_titles']
 
 
 class ResumeSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
     class Meta:
         model = Resume
-        fields = ('pk', 'title', 'notes', 'file', 'created_at', 'updated_at', 'tags')
+        fields = ('pk', 'title', 'notes', 'file', 'created_at', 'updated_at')
 
