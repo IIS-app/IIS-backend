@@ -185,11 +185,11 @@ class DossierDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
         fields = ['id', 'title', 'company', 'starrs','starr_titles', 'resume', 'resume_title', 'cover_letter','cover_letter_title', 'questions', 'question_titles', 'wins', 'win_titles', 'user', 'created_at', 'updated_at', 'draft', 'tags']
         read_only_fields = ['job_title','starr_titles','win_titles']
 
-class ResumeSerializer(TaggitSerializer, serializers.ModelSerializer):
-    tags = TagListSerializerField()
-    created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
-    updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
-    class Meta:
-        model = Resume
-        fields = ('pk', 'title', 'notes', 'file', 'created_at', 'updated_at', 'tags')
+# class ResumeSerializer(TaggitSerializer, serializers.ModelSerializer):
+#     tags = TagListSerializerField()
+#     created_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
+#     updated_at = serializers.DateTimeField(required=False, format="%m/%d/%Y %I:%M %p")
+#     class Meta:
+#         model = Resume
+#         fields = ('pk', 'title', 'notes', 'file', 'created_at', 'updated_at', 'tags')
 
