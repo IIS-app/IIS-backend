@@ -16,7 +16,8 @@ import environ
 env = environ.Env(
     DEBUG=(bool, False),
     RENDER=(bool, False),
-    USE_S3=(bool, False),
+    # USE_S3=(bool, False),
+    USE_S3=(bool, True),
 )
 
 environ.Env.read_env()

@@ -24,29 +24,24 @@ import environ
 import boto3
 import botocore
 import pdfrw
+from pdfrw import PdfReader
 from botocore.exceptions import ClientError
 
 # Generate a pdf with dossier
 
 @csrf_exempt
-def dossier_pdf(request, pk):
-
-    # Try to retrieve the Dossier object
-    try:
-        dossier = Dossier.objects.get(pk=pk)
-    except Dossier.DoesNotExist:
-        # Return a 404 response if the Dossier object does not exist
-        return HttpResponse('Dossier not found', status=404)
-
+def generate_pdf(dossier):
+    # dosier = dossier.objects
     # Create a new PDF
     pdf = canvas.Canvas('output.pdf')
 
     # Add the title to the PDF
     pdf.drawString(100, 750, dossier.title)
-
     # MY STARRS TITLE
     if dossier.starrs:
-        pdf.drawString(100, 600, "MY STARRS")    
+        pdf.drawString(100, 600, "MY STARRS")
+        # textobject = pdf.beginText(dossier.starrs.all())
+
     # Iterate through the STARR questions and add them to the PDF
     for starr in dossier.starrs.all():
         pdf.drawString(100, 525, starr.question)
@@ -65,11 +60,45 @@ def dossier_pdf(request, pk):
     for win in dossier.wins.all():
         pdf.drawString(100, 500, win.title)
 
-    pdf.showPage()
+    # Save the PDF
+    pdf.save()
 
-    # Add the resume title to the PDF
-    pdf.drawString(100, 700, dossier.resume.title)
+    # Open the PDF file in binary mode
+    with open('output.pdf', 'rb') as f:
+        # Read the contents of the PDF file
+        pdf_file = f.read()
+    
+    # Define the S3 bucket and file name
+    bucket_name = os.environ['AWS_STORAGE_BUCKET_NAME']
+    i = 1
+    while os.path.isfile(f'generated_dossier_pdfs/generated_dossier_{i}.pdf'):
+        i += 1
+    file_name = f'generated_dossier_pdfs/generated_dossier_{i}.pdf'
 
+    # Connect to S3
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+        aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
+    )
+
+    # Upload the PDF file to S3
+    s3.put_object(Bucket=bucket_name, Key=file_name, Body=pdf_file)
+
+    # you may need to return the file_name for next merge function.
+    return file_name
+
+@csrf_exempt
+def merge_pdf(request, pk):
+    # Try to retrieve the Dossier object
+    try:
+        dossier = Dossier.objects.get(pk=pk)
+    except Dossier.DoesNotExist:
+        # Return a 404 response if the Dossier object does not exist
+        return HttpResponse('Dossier not found', status=404)
+
+    # Generate the pdf containing the user's data
+    generated_pdf_file_name = generate_pdf(dossier)
 
     # Retrieve the resume file from the S3 bucket
     s3 = boto3.client(
@@ -77,63 +106,99 @@ def dossier_pdf(request, pk):
         aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
         aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
     )
-    # Define the S3 bucket and file name
     bucket_name = os.environ['AWS_STORAGE_BUCKET_NAME']
-    file_name = 'path/to/resume.pdf'
+    # Define the S3 bucket and file name
 
+    resume = dossier.resume
+    
+    cover_letter = dossier.cover_letter
 
-    # Download the file from S3 and save it to a variable if it exists
-    try:
-    # Attempt to retrieve the file from S3
-        resume = s3.get_object(Bucket=bucket_name, Key=file_name)['Body']
-        resume = s3.get_object(Bucket=bucket_name, Key=file_name)['Body']
+    # Download the files from S3 and save it to a variable if they exist
+    if resume.resume_file.name and cover_letter.cover_letter_file.name:
+        file_name_pdf = generated_pdf_file_name
+        
+        file_name_resume = dossier.resume.resume_file.name
 
-        # Open the downloaded file using pdfrw
-        resume_pdf = pdfrw.PdfReader(resume)
+        file_name_cover_letter = dossier.cover_letter.cover_letter_file.name
+
+        # Attempt to retrieve the file from S3
+        pdf_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_pdf)['Body']
+
+        resume_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_resume)['Body']
+
+        cover_letter_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_cover_letter)['Body']
 
         # Open the generated pdf using pdfrw
-        pdf = pdfrw.PdfReader('output.pdf')
+        # breakpoint()
+        pdf_pages = pdfrw.PdfReader(pdf_s3_file).pages
+        resume_pages = pdfrw.PdfReader(resume_s3_file).pages
+        cover_letter_pages = pdfrw.PdfReader(cover_letter_s3_file).pages
+        new_pdf = pdfrw.PdfWriter()
+        # Add the pages from the input PDFs
+        new_pdf.addpages(pdf_pages)
+        new_pdf.addpages(resume_pages)
+        new_pdf.addpages(cover_letter_pages)
 
         # Use pdfrw's merge function to combine the two pdfs
-        pdfrw.PageMerge(pdf.pages[0]).add(resume_pdf.pages[0]).render()
+        pdf_pages = pdfrw.PageMerge(pdf_pages[0]).add(resume_pages[0],cover_letter_pages[0]).render()
 
         # Save the combined pdf
-        pdfrw.PdfWriter().write('output.pdf', pdf)
+        new_pdf.write('dossier.pdf')
+    if resume.resume_file.name and not cover_letter.cover_letter_file.name:
+        file_name_pdf = generated_pdf_file_name
 
-        pdf.showPage() 
-    except botocore.exceptions.ClientError as e:
-    # Handle the exception if the file doesn't exist
-        if e.response['Error']['Code'] == "NoSuchKey":
-            print("The Resume doesn't exist")
-        else:
-            raise
-    # resume = s3.get_object(Bucket=bucket_name, Key=file_name)['Body']
+        file_name_resume = resume.resume_file.name
 
-    # # Open the downloaded file using pdfrw
-    # resume_pdf = pdfrw.PdfReader(resume)
+        # Attempt to retrieve the file from S3
+        pdf_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_pdf)['Body']
 
-    # # Open the generated pdf using pdfrw
-    # pdf = pdfrw.PdfReader('output.pdf')
+        pdf_file = generate_pdf(dossier)
+        resume_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_resume)['Body']
 
-    # # Use pdfrw's merge function to combine the two pdfs
-    # pdfrw.PageMerge(pdf.pages[0]).add(resume_pdf.pages[0]).render()
+        # Open the generated pdf using pdfrw
+        # breakpoint()
+        pdf_pages = pdfrw.PdfReader(pdf_s3_file).pages
+        resume_pages = pdfrw.PdfReader(resume_s3_file).pages
+        new_pdf = pdfrw.PdfWriter()
+        # Add the pages from the input PDFs
+        new_pdf.addpages(pdf_pages)
+        new_pdf.addpages(resume_pages)
 
-    # # Save the combined pdf
-    # pdfrw.PdfWriter().write('output.pdf', pdf)
+        # Use pdfrw's merge function to combine the two pdfs
+        pdf_pages = pdfrw.PageMerge(pdf_pages[0]).add(resume_pages[0]).render()
 
-    # pdf.showPage()
-        
-    # Add the cover letter title to the PDF
-    pdf.drawString(100, 650, dossier.cover_letter.title)
+        # Save the combined pdf
+        new_pdf.write('dossier.pdf')
+    if cover_letter.cover_letter_file.name and not resume.resume_file.name:
+        file_name_pdf = generated_pdf_file_name
 
-    # Save the PDF
-    pdf.save()
+        file_name_cover_letter = dossier.cover_letter.cover_letter_file.name
+
+        # Attempt to retrieve the file from S3
+        pdf_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_pdf)['Body']
+
+        cover_letter_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_cover_letter)['Body']
+
+        # Open the generated pdf using pdfrw
+        # breakpoint()
+        pdf_pages = pdfrw.PdfReader(pdf_s3_file).pages
+        cover_letter_pages = pdfrw.PdfReader(cover_letter_s3_file).pages
+        new_pdf = pdfrw.PdfWriter()
+        # Add the pages from the input PDFs
+        new_pdf.addpages(pdf_pages)
+        new_pdf.addpages(cover_letter_pages)
+
+        # Use pdfrw's merge function to combine the two pdfs
+        pdf_pages = pdfrw.PageMerge(pdf_pages[0]).add(cover_letter_pages[0]).render()
+
+        # Save the combined pdf
+        new_pdf.write('dossier.pdf')
 
     # Open the PDF file in binary mode
-    with open('output.pdf', 'rb') as f:
+    with open('dossier.pdf', 'rb') as f:
         # Create an HttpResponse object with the PDF file's contents
         response = HttpResponse(f.read(), content_type='application/pdf')
-        response['Content-Disposition'] = 'inline; filename=output.pdf'
+        response['Content-Disposition'] = 'inline; filename=pdf'
 
         return response
 
