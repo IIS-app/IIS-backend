@@ -9,7 +9,7 @@ from django.core.files.storage import FileSystemStorage
 from datetime import datetime
 
 #for pdf generation
-from django.http import FileResponse
+from django.http import FileResponse, JsonResponse
 import io
 from io import BytesIO
 from reportlab.pdfgen import canvas
@@ -119,6 +119,11 @@ def generate_pdf(dossier):
     pdf_file = buffer.getvalue()
     buffer.close()
     
+    # session = boto3.session.Session(
+    #         aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+    #         aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
+    #     )
+
     # Save the PDF to AWS S3
     s3 = boto3.client(
         's3',
@@ -129,7 +134,7 @@ def generate_pdf(dossier):
 
     generated_file_name = "generated_dossiers/generated_dossier_%s.pdf" % dossier.id
 
-    s3.put_object(Bucket= bucket_name, Key=generated_file_name, Body=pdf_file)
+    s3.put_object(Bucket= bucket_name, Key=generated_file_name, Body=pdf_file, ACL='public-read')
 
     return generated_file_name
     
@@ -213,9 +218,13 @@ def merge_pdf(request, pk):
 
 
         # breakpoint()
-
+        session = boto3.session.Session(
+            aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+            aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
+        )
+        
         # Save the PDF to AWS S3
-        s3 = boto3.client(
+        s3 = session.client(
             's3',
             aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
             aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
@@ -225,7 +234,7 @@ def merge_pdf(request, pk):
         file_name = os.path.join("final_dossiers", "final_dossier_%s.pdf" % dossier.id)
 
 
-        s3.put_object(Bucket= bucket_name, Key=file_name, Body=new_pdf_bytes.getvalue())
+        s3.put_object(Bucket= bucket_name, Key=file_name, Body=new_pdf_bytes.getvalue(), ACL='public-read')
 
         # breakpoint()
         
@@ -294,7 +303,26 @@ def merge_pdf(request, pk):
         response = HttpResponse(final_dossier_pdf_file, content_type='application/pdf')            
         response['Content-Disposition'] = f'attachment; filename="final_dossier.pdf"'
 
-        return response
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+            aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
+        )
+        bucket_name = os.environ['AWS_STORAGE_BUCKET_NAME']
+
+        file_name = os.path.join("final_dossiers", "final_dossier_%s.pdf" % dossier.id)
+
+        # Generate a pre-signed URL
+        url = s3.generate_presigned_url(
+            'get_object',
+            Params={
+                'Bucket': bucket_name,
+                'Key': file_name
+            },
+            ExpiresIn=3600  # URL will expire in 1 hour
+        )
+
+        return JsonResponse({'url': url})
 
 
 # Create views here
