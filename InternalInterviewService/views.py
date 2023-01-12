@@ -11,9 +11,13 @@ from datetime import datetime
 #for pdf generation
 from django.http import FileResponse
 import io
+from io import BytesIO
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Paragraph, KeepTogether, PageBreak, Table, TableStyle
 import requests
 from django.http import HttpResponse
 import json
@@ -26,68 +30,109 @@ import botocore
 import pdfrw
 from pdfrw import PdfReader
 from botocore.exceptions import ClientError
+from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
 
 # Generate a pdf with dossier
 
 @csrf_exempt
 def generate_pdf(dossier):
-    # dosier = dossier.objects
-    # Create a new PDF
-    pdf = canvas.Canvas('output.pdf')
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    styles = getSampleStyleSheet()
+    elements = []
 
-    # Add the title to the PDF
-    pdf.drawString(100, 750, dossier.title)
-    # MY STARRS TITLE
+    # Add the title to the PDF as a page header
+    page_title_style = ParagraphStyle(name='title', fontName='Helvetica', fontSize=20, wordWrap=True, leading=14, alignment=TA_CENTER)
+    title = dossier.title
+    elements.append(Paragraph(title, styles["Heading1"]))
+
+    # STARR stories
     if dossier.starrs:
-        pdf.drawString(100, 600, "MY STARRS")
-        # textobject = pdf.beginText(dossier.starrs.all())
+        elements.append(Paragraph("STARR stories", styles["Heading2"]))
+        data=[]
+        
+        data.append(["Question", "Summary", "Situation", "Task", "Action", "Reflection", "Result"])
 
-    # Iterate through the STARR questions and add them to the PDF
-    for starr in dossier.starrs.all():
-        pdf.drawString(100, 525, starr.question)
-        pdf.drawString(100, 526, starr.summary)
-        pdf.drawString(100, 527, starr.situation)
-        pdf.drawString(100, 528, starr.task)
-        pdf.drawString(100, 529, starr.action)
-        pdf.drawString(100, 530, starr.reflection)
-        pdf.drawString(100, 531, starr.result)
+        # elements.append(KeepTogether(t))
 
-    # Iterate through the questions and add them to the PDF
-    for question in dossier.questions.all():
-        pdf.drawString(100, 550, question.question)
 
-    # Iterate through the wins and add them to the PDF
-    for win in dossier.wins.all():
-        pdf.drawString(100, 500, win.title)
+        cell_style = ParagraphStyle(name='test', fontName='Helvetica', fontSize=12, wordWrap=True, leading=14, alignment=TA_CENTER)
 
-    # Save the PDF
-    pdf.save()
+        for starr in dossier.starrs.all():
+            data.append([Paragraph(starr.question), Paragraph(starr.summary), Paragraph(starr.situation), Paragraph(starr.task), Paragraph(starr.action), Paragraph(starr.reflection), Paragraph(starr.result)])
+        t=Table(data, colWidths=[1.07142857*inch]*len(data[0]))
 
-    # Open the PDF file in binary mode
-    with open('output.pdf', 'rb') as f:
-        # Read the contents of the PDF file
-        pdf_file = f.read()
+        t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,-1),colors.gray),
+                               ('TEXTCOLOR',(0,0),(-1,-1),colors.whitesmoke),
+                               ('ALIGN',(0,0),(-1,-1),'CENTER'),
+                               ('FONTNAME', (0,0), (-1,-1), 'Helvetica-Bold'),
+                               ('FONTSIZE', (0,0), (-1,-1), 12),
+                               ('BOTTOMPADDING', (0,0), (-1,-1), 12),
+                               ('BACKGROUND',(0,0),(0,-1),colors.beige),
+                               ('GRID',(0,0),(-1,-1),1,colors.black),]))
+        elements.append(KeepTogether(t))
     
-    # Define the S3 bucket and file name
-    bucket_name = os.environ['AWS_STORAGE_BUCKET_NAME']
-    i = 1
-    while os.path.isfile(f'generated_dossier_pdfs/generated_dossier_{i}.pdf'):
-        i += 1
-    file_name = f'generated_dossier_pdfs/generated_dossier_{i}.pdf'
 
-    # Connect to S3
+    # Wins
+    if dossier.wins:
+        data=[]
+        elements.append(Paragraph("Wins", styles["Heading2"]))
+        data.append(["Win Title", "Win"])
+        for win in dossier.wins.all():
+            data.append([Paragraph(win.title), Paragraph(win.win)])
+        t=Table(data, colWidths=[3.75*inch]*len(data[0]))
+        t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,-1),colors.gray),
+                               ('TEXTCOLOR',(0,0),(-1,-1),colors.whitesmoke),
+                               ('ALIGN',(0,0),(-1,-1),'CENTER'),
+                               ('FONTNAME', (0,0), (-1,-1), 'Helvetica-Bold'),
+                               ('FONTSIZE', (0,0), (-1,-1), 14),
+                               ('BOTTOMPADDING', (0,0), (-1,-1), 12),
+                               ('BACKGROUND',(0,0),(0,-1),colors.beige),
+                               ('GRID',(0,0),(-1,-1),1,colors.black)]))
+        elements.append(KeepTogether(t))
+
+
+
+    # Questions
+    if dossier.questions:
+        data=[]
+        elements.append(Paragraph("Questions", styles["Heading2"]))
+        data.append(["Question", "Answer"])
+        for question in dossier.questions.all():
+            data.append([Paragraph(question.question), Paragraph(question.answer)])
+        t=Table(data, colWidths=[3.75*inch]*len(data[0]))
+        t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,-1),colors.gray),
+                               ('TEXTCOLOR',(0,0),(-1,-1),colors.whitesmoke),
+                               ('ALIGN',(0,0),(-1,-1),'CENTER'),
+                               ('FONTNAME', (0,0), (-1,-1), 'Helvetica-Bold'),
+                               ('FONTSIZE', (0,0), (-1,-1), 14),
+                               ('BOTTOMPADDING', (0,0), (-1,-1), 12),
+                               ('BACKGROUND',(0,0),(0,-1),colors.beige),
+                               ('GRID',(0,0),(-1,-1),1,colors.black)]))
+        elements.append(KeepTogether(t))
+    
+
+    # Build the PDF
+    doc.build(elements)
+
+    # Get the value of the BytesIO buffer
+    pdf_file = buffer.getvalue()
+    buffer.close()
+    
+    # Save the PDF to AWS S3
     s3 = boto3.client(
         's3',
         aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
         aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
     )
+    bucket_name = os.environ['AWS_STORAGE_BUCKET_NAME']
 
-    # Upload the PDF file to S3
-    s3.put_object(Bucket=bucket_name, Key=file_name, Body=pdf_file)
+    generated_file_name = "generated_dossiers/generated_dossier_%s.pdf" % dossier.id
 
-    # you may need to return the file_name for next merge function.
-    return file_name
+    s3.put_object(Bucket= bucket_name, Key=generated_file_name, Body=pdf_file)
 
+    return generated_file_name
+    
 @csrf_exempt
 def merge_pdf(request, pk):
     # Try to retrieve the Dossier object
@@ -99,7 +144,7 @@ def merge_pdf(request, pk):
 
     # Generate the pdf containing the user's data
     generated_pdf_file_name = generate_pdf(dossier)
-
+    # breakpoint()
     # Retrieve the resume file from the S3 bucket
     s3 = boto3.client(
         's3',
@@ -115,8 +160,9 @@ def merge_pdf(request, pk):
 
     # Download the files from S3 and save it to a variable if they exist
     if resume.resume_file.name and cover_letter.cover_letter_file.name:
+
         file_name_pdf = generated_pdf_file_name
-        
+
         file_name_resume = dossier.resume.resume_file.name
 
         file_name_cover_letter = dossier.cover_letter.cover_letter_file.name
@@ -128,80 +174,127 @@ def merge_pdf(request, pk):
 
         cover_letter_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_cover_letter)['Body']
 
-        # Open the generated pdf using pdfrw
+        # cover_letter_file = BytesIO(cover_letter_s3_file)
+
+        # resume_file = BytesIO(resume_s3_file)
+
+
         # breakpoint()
+        # Open the generated pdf using pdfrw
+
         pdf_pages = pdfrw.PdfReader(pdf_s3_file).pages
         resume_pages = pdfrw.PdfReader(resume_s3_file).pages
         cover_letter_pages = pdfrw.PdfReader(cover_letter_s3_file).pages
+
         new_pdf = pdfrw.PdfWriter()
+
         # Add the pages from the input PDFs
         new_pdf.addpages(pdf_pages)
         new_pdf.addpages(resume_pages)
         new_pdf.addpages(cover_letter_pages)
 
-        # Use pdfrw's merge function to combine the two pdfs
-        pdf_pages = pdfrw.PageMerge(pdf_pages[0]).add(resume_pages[0],cover_letter_pages[0]).render()
-
-        # Save the combined pdf
-        new_pdf.write('dossier.pdf')
-    if resume.resume_file.name and not cover_letter.cover_letter_file.name:
-        file_name_pdf = generated_pdf_file_name
-
-        file_name_resume = resume.resume_file.name
-
-        # Attempt to retrieve the file from S3
-        pdf_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_pdf)['Body']
-
-        pdf_file = generate_pdf(dossier)
-        resume_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_resume)['Body']
-
-        # Open the generated pdf using pdfrw
         # breakpoint()
-        pdf_pages = pdfrw.PdfReader(pdf_s3_file).pages
-        resume_pages = pdfrw.PdfReader(resume_s3_file).pages
-        new_pdf = pdfrw.PdfWriter()
-        # Add the pages from the input PDFs
-        new_pdf.addpages(pdf_pages)
-        new_pdf.addpages(resume_pages)
+        # # Use pdfrw's merge function to combine the three pdfs
+        # merger = pdfrw.PageMerge()
+        # for page in pdf_pages:
+        #     merger.add(page)
+        # for page in resume_pages:
+        #     merger.add(page)
+        # for page in cover_letter_pages:
+        #     merger.add(page)
+        # # pdf_pages = merger.render()
 
-        # Use pdfrw's merge function to combine the two pdfs
-        pdf_pages = pdfrw.PageMerge(pdf_pages[0]).add(resume_pages[0]).render()
+        # # Save the combined pdf
+        # new_pdf.write('final_dossier.pdf')
 
-        # Save the combined pdf
-        new_pdf.write('dossier.pdf')
-    if cover_letter.cover_letter_file.name and not resume.resume_file.name:
-        file_name_pdf = generated_pdf_file_name
+        new_pdf_bytes = io.BytesIO()
+        new_pdf.write(new_pdf_bytes)
+        new_pdf_bytes.seek(0)
 
-        file_name_cover_letter = dossier.cover_letter.cover_letter_file.name
 
-        # Attempt to retrieve the file from S3
-        pdf_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_pdf)['Body']
-
-        cover_letter_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_cover_letter)['Body']
-
-        # Open the generated pdf using pdfrw
         # breakpoint()
-        pdf_pages = pdfrw.PdfReader(pdf_s3_file).pages
-        cover_letter_pages = pdfrw.PdfReader(cover_letter_s3_file).pages
-        new_pdf = pdfrw.PdfWriter()
-        # Add the pages from the input PDFs
-        new_pdf.addpages(pdf_pages)
-        new_pdf.addpages(cover_letter_pages)
 
-        # Use pdfrw's merge function to combine the two pdfs
-        pdf_pages = pdfrw.PageMerge(pdf_pages[0]).add(cover_letter_pages[0]).render()
+        # Save the PDF to AWS S3
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+            aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
+        )
+        bucket_name = os.environ['AWS_STORAGE_BUCKET_NAME']
 
-        # Save the combined pdf
-        new_pdf.write('dossier.pdf')
+        file_name = os.path.join("final_dossiers", "final_dossier_%s.pdf" % dossier.id)
 
-    # Open the PDF file in binary mode
-    with open('dossier.pdf', 'rb') as f:
-        # Create an HttpResponse object with the PDF file's contents
-        response = HttpResponse(f.read(), content_type='application/pdf')
-        response['Content-Disposition'] = 'inline; filename=pdf'
+
+        s3.put_object(Bucket= bucket_name, Key=file_name, Body=new_pdf_bytes.getvalue())
+
+        # breakpoint()
+        
+    # if resume.resume_file.name and not cover_letter.cover_letter_file.name:
+    #     file_name_pdf = generated_pdf_file_name
+
+    #     file_name_resume = resume.resume_file.name
+
+    #     # Attempt to retrieve the file from S3
+    #     pdf_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_pdf)['Body']
+
+    #     pdf_file = generate_pdf(dossier)
+    #     resume_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_resume)['Body']
+
+    #     # Open the generated pdf using pdfrw
+    #     # breakpoint()
+    #     pdf_pages = pdfrw.PdfReader(pdf_s3_file).pages
+    #     resume_pages = pdfrw.PdfReader(resume_s3_file).pages
+    #     new_pdf = pdfrw.PdfWriter()
+    #     # Add the pages from the input PDFs
+    #     new_pdf.addpages(pdf_pages)
+    #     new_pdf.addpages(resume_pages)
+
+    #     # Use pdfrw's merge function to combine the two pdfs
+    #     pdf_pages = pdfrw.PageMerge(pdf_pages[0]).add(resume_pages[0]).render()
+
+    #     # Save the combined pdf
+    #     new_pdf.write('dossier.pdf')
+    # if cover_letter.cover_letter_file.name and not resume.resume_file.name:
+    #     file_name_pdf = generated_pdf_file_name
+    #     breakpoint()
+    #     file_name_cover_letter = dossier.cover_letter.cover_letter_file.name
+
+    #     # Attempt to retrieve the file from S3
+    #     pdf_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_pdf)['Body']
+
+    #     cover_letter_s3_file = s3.get_object(Bucket=bucket_name, Key=file_name_cover_letter)['Body']
+
+    #     # Open the generated pdf using pdfrw
+    #     # breakpoint()
+    #     pdf_pages = pdfrw.PdfReader(pdf_s3_file).pages
+    #     cover_letter_pages = pdfrw.PdfReader(cover_letter_s3_file).pages
+    #     new_pdf = pdfrw.PdfWriter()
+    #     # Add the pages from the input PDFs
+    #     new_pdf.addpages(pdf_pages)
+    #     new_pdf.addpages(cover_letter_pages)
+
+    #     # Use pdfrw's merge function to combine the two pdfs
+    #     pdf_pages = pdfrw.PageMerge(pdf_pages[0]).add(cover_letter_pages[0]).render()
+
+    #     # Save the combined pdf
+    #     new_pdf.write('dossier.pdf')
+
+    # # Open the PDF file in binary mode
+    # with open('dossier.pdf', 'rb') as f:
+    #     # Create an HttpResponse object with the PDF file's contents
+    #     response = HttpResponse(f.read(), content_type='application/pdf')
+    #     response['Content-Disposition'] = 'inline; filename=pdf'
+
+        file_name = "final_dossiers/final_dossier_%s.pdf" % dossier.id
+
+        final_dossier_pdf_file = s3.get_object(Bucket=bucket_name, Key=file_name)['Body']
+
+        # breakpoint()
+
+        response = HttpResponse(final_dossier_pdf_file, content_type='application/pdf')            
+        response['Content-Disposition'] = f'attachment; filename="final_dossier.pdf"'
 
         return response
-
 
 
 # Create views here
